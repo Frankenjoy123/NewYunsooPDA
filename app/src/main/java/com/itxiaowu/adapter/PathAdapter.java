@@ -39,7 +39,6 @@ public class PathAdapter extends BaseAdapter
 	}
 
 	private Resources res;
-   // private MyLog logger = MyLog.yLog();
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {

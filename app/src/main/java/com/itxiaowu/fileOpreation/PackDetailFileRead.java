@@ -23,6 +23,7 @@ public class PackDetailFileRead {
 	private int i_year;
 	private String mouthString;
 	private String dayString;
+    private String yesterdayString;
 
 	private List<PackageDetail> packageDetailList;
 	
@@ -43,6 +44,9 @@ public class PackDetailFileRead {
         int i_month = nowTime.month+1;
         mouthString=(i_month<10)?("0"+i_month):(i_month+"");
         int i_day = nowTime.monthDay;
+
+        int yesterday=i_day-1;
+        yesterdayString=(yesterday<10)?("0"+yesterday):(yesterday+"");
         dayString=(i_day<10)?("0"+i_day):(i_day+"");
         File parentFile=new File(Environment.getExternalStorageDirectory()+FOLDERNAME);
         File[] childrenFiles= parentFile.listFiles(new FileFilter() {
@@ -50,7 +54,9 @@ public class PackDetailFileRead {
 			@Override
 			public boolean accept(File pathname) {
 
-				if(pathname.getName().startsWith(prefix+i_year+"_"+mouthString+"_"+dayString)){
+				if(pathname.getName().startsWith(prefix+i_year+"_"+mouthString+"_"+dayString)
+
+                        ||pathname.getName().startsWith(prefix+i_year+"_"+mouthString+"_"+yesterdayString)){
 					return true;
 				}
 				return false;
@@ -85,10 +91,10 @@ public class PackDetailFileRead {
 				
 				
 			} catch (FileNotFoundException e) {
-				// TODO �Զ����ɵ� catch ��
+
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO �Զ����ɵ� catch ��
+
 				e.printStackTrace();
 			}
         }

@@ -32,7 +32,6 @@ public class ProductInPackageAdapter extends BaseAdapter
 	}
 
 	private Resources res;
-   // private MyLog logger = MyLog.yLog();
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -68,7 +67,6 @@ public class ProductInPackageAdapter extends BaseAdapter
         }
         catch(Exception ex)
         {
-   //         logger.e(ex);
         	Log.d("ZXW", "ViewAdapter getView");
             return null;
         }
@@ -78,7 +76,6 @@ public class ProductInPackageAdapter extends BaseAdapter
     {
         this.context = context;
         this.res = res;
-        Log.d("ZXW", "ViewAdapter ���캯��");
     }
 
     @Override
@@ -98,7 +95,5 @@ public class ProductInPackageAdapter extends BaseAdapter
     {
         return productIdList.get(position);
     }
-
-
 
 }

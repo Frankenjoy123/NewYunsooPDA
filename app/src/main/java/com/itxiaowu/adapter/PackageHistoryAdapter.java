@@ -78,22 +78,14 @@ public class PackageHistoryAdapter extends BaseAdapter
 
             TextView textView = ((TextView) linearLayout
                     .findViewById(id.pathTextview));
-//            textView.setText(keyList.get(position));
+
             textView.setText(packageDetailList.get(position).getPackageId());
 
             ImageView imageView = ((ImageView) linearLayout
                     .findViewById(id.pathImage));
             imageView.setImageDrawable(res.getDrawable(drawable.package1));
             
-//            linearLayout.setOnClickListener(new OnClickListener() {
-//				
-//				@Override
-//				public void onClick(View v) {
-//					// TODO �Զ����ɵķ������
-//					Intent intent=new Intent(PackageHistoryAdapter.this, PackageDetail.class);
-//					
-//				}
-//			});
+
 
             return linearLayout;
         }

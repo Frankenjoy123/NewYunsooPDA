@@ -187,7 +187,7 @@ public class ScanActivity extends Activity {
 	}
 	@Override
 	protected void onRestart() {
-		// TODO �Զ����ɵķ������
+
 		super.onRestart();
 		Log.d("ZXW", "MainActivity onRestart");
 	}
@@ -261,9 +261,6 @@ public class ScanActivity extends Activity {
 			public void afterTextChanged(Editable s) {
 				String string=new StringBuilder(s).toString();
 				try {
-//					if(s.toString().isEmpty()||s.toString()=="\n"){
-//						return;
-//					}
 					if(string.isEmpty()||string=="\n"){
 						return;
 					}
@@ -359,9 +356,7 @@ public class ScanActivity extends Activity {
 
 		            editText.requestFocus();
 		            package_key_EditText.clearFocus();
-		            
-		            
-		            	
+
 		        }	
 			}
 		});
