@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+     <color name="result_view">#b0000000</color>
+      <color name="viewfinder_mask">#60000000</color>
+      <color name="possible_result_points">#c0ffff00</color> 
+       <color name="clear_color">#FFFFFF</color>   
+        <color name="headline_color">#666666</color>
+        <color name="scan_frame_color">#4BC5FE</color>
+        <color name="scan_current_color">#0078D5</color>
+         <color name="scan_past_color">#999</color>
+ <color name="titlebar_bg">#47ABEF</color>
+</resources>

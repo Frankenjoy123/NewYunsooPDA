@@ -1,0 +1,43 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="${relativePackage}.${activityClass}" >
+
+    <LinearLayout
+        android:id="@+id/ll_packhis"
+         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        
+        <TextView 
+         
+            android:layout_width="0dp"
+            android:layout_weight="0.3"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:text="包装码"/>
+        <TextView 
+            android:id="@+id/tv_packageID"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            
+            />
+        
+    </LinearLayout>
+    
+    <ListView 
+        android:id="@+id/lv_productInPack"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_below="@id/ll_packhis"
+        android:layout_marginTop="5dp"
+        >
+        
+        
+    </ListView>
+    
+    
+
+</RelativeLayout>

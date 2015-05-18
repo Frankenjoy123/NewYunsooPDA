@@ -1,0 +1,24 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:gravity="center"
+    tools:context="com.itxiaowu.activity.WelcomeActivity" >
+
+    <Button 
+        android:id="@+id/btn_package_page"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:text="进入打包环节"
+        android:textSize="30sp"/>
+    <Button
+        android:id="@+id/btn_path_page"
+         android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_below="@id/btn_package_page"
+        android:layout_marginTop="50dp"
+        android:text="进入物流环节"
+        android:textSize="30sp"/>
+
+</RelativeLayout>
