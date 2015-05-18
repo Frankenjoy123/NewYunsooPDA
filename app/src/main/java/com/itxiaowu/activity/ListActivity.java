@@ -53,6 +53,8 @@ public class ListActivity extends Activity{
 		Log.d("ZXW", "ListActivity onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
+
+        getActionBar().hide();
         
         listItems=new ArrayList<ListItem>();
         deleteItemTitles=new ArrayList<String>();

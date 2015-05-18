@@ -46,16 +46,17 @@ public class ScanActivity extends Activity {
 	private ImageView downArrow;
 	
 	private ProgressBar progressBar;
+    private MyListAdapter standardAdapter;
 
-	private int[] standards=new int[]{5,10,20,30,50};
-
+//	private int[] standards=new int[]{5,10,20,30,50};
+    private List<Integer> standards=new ArrayList<Integer>();
 	private int standard=5;
 
 	private int count=0;
 
 	private int finishedBags=0;
 	
-	private List<String> msgList;
+//	private List<String> msgList;
 
 	List<ListItem> listItems;
 	
@@ -85,12 +86,28 @@ public class ScanActivity extends Activity {
 		Log.d("ZXW", "MainActivity onCreate");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+        //	private int[] standards=new int[]{5,10,20,30,50};
+        standards.add(5);
+        standards.add(10);
+        standards.add(20);
+        standards.add(30);
+        standards.add(50);
 		
 		getActionBar().hide();
 		titleBar=(TitleBar) findViewById(R.id.package_title_bar);
-        titleBar.setMode(TitleBar.TitleBarMode.LEFT_BUTTON);
+        titleBar.setMode(TitleBar.TitleBarMode.BOTH_BUTTONS);
         titleBar.setDisplayAsBack(true);
         titleBar.setTitle("打包扫描");
+        titleBar.setRightButtonText(getString(R.string.settings));
+        titleBar.setOnRightButtonClickedListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(ScanActivity.this,SettingActivity.class);
+                intent.putExtra("standard",standard);
+                intent.putExtra("finishedBags",finishedBags);
+                startActivityForResult(intent, 200);
+            }
+        });
 		
 		listItems=new ArrayList<ListItem>();
 		input = (TextView) findViewById(R.id.input);
@@ -118,11 +135,11 @@ public class ScanActivity extends Activity {
 		progressBar.setMax(5);
 		progressBar.setProgress(0);
 		
-		msgList = new ArrayList<String>();
+//		msgList = new ArrayList<String>();
 	
-		for (int i = 0; i < 5; i++) {
-			msgList.add(""+standards[i]+"个/箱");
-		}
+//		for (int i = 0; i < standards.size(); i++) {
+//			msgList.add(""+standards.get(i)+"个/箱");
+//		}
 		
 		initListView();
 		
@@ -134,7 +151,9 @@ public class ScanActivity extends Activity {
 				System.out.println("=======");
 
 				popWin = new PopupWindow(ScanActivity.this);
-				popWin.setWidth(input.getWidth());
+//				popWin.setWidth(input.getWidth());
+                popWin.setWidth(200);
+
 				popWin.setHeight(300);
 				popWin.setContentView(listView);
 				popWin.setOutsideTouchable(true);
@@ -179,6 +198,8 @@ public class ScanActivity extends Activity {
 	
 	}
 
+
+
 	@Override
 	protected void onStart() {
 
@@ -222,9 +243,7 @@ public class ScanActivity extends Activity {
 		        		if(listItems.get(j).getTitle().equals(delete_titles.get(i))){
 		        			listItems.remove(j);
 		        			count--;
-		        			
 		        		}
-						
 					}
 				}
 			}
@@ -235,10 +254,38 @@ public class ScanActivity extends Activity {
 	        progressBar.setProgress(count);
 	        progressText.setText("当前进度"+count+"/"+standard);
 		}
+
+        if(requestCode==200&resultCode==200){
+
+            int temp=data.getIntExtra("et_standard",-1);
+            if (!standards.contains(temp)||temp!=-1){
+                standard=temp;
+                standards.add(standard);
+            }
+            if(data.getIntExtra("edit_count",-1)>=0){
+                finishedBags=data.getIntExtra("edit_count",-1);
+            }
+
+//            for (int i = 0; i < standards.size(); i++) {
+//                msgList.add(""+standards.get(i)+"个/箱");
+//            }
+//            msgList.add(""+standards.get(standards.size()-1)+"个/箱");
+            refreshUI();
+
+        }
 	}
-	
-	
-	private void bindTextChanged(){
+
+    private void refreshUI() {
+        input.setText(""+standard);
+        progressBar.setProgress(count);
+        progressText.setText("当前进度"+count+"/"+standard);
+        progressBar.setMax(standard);
+        finish_package_text.setText("今日已打包： "+finishedBags+"箱");
+        standardAdapter.notifyDataSetChanged();
+    }
+
+
+    private void bindTextChanged(){
 		editText= (EditText) findViewById(R.id.editText);
 		editText.requestFocus();
 		
@@ -411,21 +458,23 @@ public class ScanActivity extends Activity {
 	private void initListView() {
 		listView = new ListView(this);
 		listView.setBackgroundResource(R.drawable.listview_background);
-
+//        listView.setBackground(null);
+//        listView.setAlpha(0.5);
 		listView.setVerticalScrollBarEnabled(false);
-		listView.setAdapter(new MyListAdapter());
+        standardAdapter=new MyListAdapter();
+		listView.setAdapter(standardAdapter);
 	}
 
 	private class MyListAdapter extends BaseAdapter{
 
 		@Override
 		public int getCount() {
-			return msgList.size();
+			return standards.size();
 		}
 
 		@Override
 		public Object getItem(int position) {
-			return position;
+			return standards.get(position);
 		}
 
 		@Override
@@ -445,16 +494,16 @@ public class ScanActivity extends Activity {
 				holder = (ViewHolder) convertView.getTag();
 			}
 			
-			holder.tv_msg.setText(msgList.get(position));
+			holder.tv_msg.setText(""+standards.get(position));
 			
 			convertView.setOnClickListener(new OnClickListener() {
 				
 				@Override
 				public void onClick(View v) {
 
-					input.setText(msgList.get(position));
-					
-					standard=standards[position];
+//					input.setText(msgList.get(position));
+					input.setText(standards.get(position).toString());
+					standard=standards.get(position);
 					progressBar.setMax(standard);
 					progressText.setText("当前进度:"+count+"/"+standard);
 					popWin.dismiss();

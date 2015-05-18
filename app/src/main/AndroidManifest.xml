@@ -13,6 +13,10 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -24,11 +28,11 @@
         </activity>
         <!-- 声明ListActivity -->
         <activity
-            android:name="com.itxiaowu.activity.ListActivity"
+            android:name=".ListActivity"
             android:label="ListActivity" >
         </activity>
         <activity
-            android:name="com.itxiaowu.activity.WelcomeActivity"
+            android:name=".WelcomeActivity"
             android:label="@string/title_activity_welcome" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,20 +41,24 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.itxiaowu.activity.PathActivity"
+            android:name=".PathActivity"
             android:label="@string/title_activity_path" >
         </activity>
         <activity
-            android:name="com.itxiaowu.activity.PathHistoryActivity"
+            android:name=".PathHistoryActivity"
             android:label="@string/title_activity_path_history" >
         </activity>
         <activity
-            android:name="com.itxiaowu.activity.PackedHistoryActivity"
+            android:name=".PackedHistoryActivity"
             android:label="@string/title_activity_packed_history" >
         </activity>
         <activity
-            android:name="com.itxiaowu.activity.PackDetail"
+            android:name=".PackDetail"
             android:label="@string/title_activity_pack_detail" >
+        </activity>
+        <activity
+            android:name=".SettingActivity"
+            android:label="@string/title_activity_setting" >
         </activity>
     </application>
 

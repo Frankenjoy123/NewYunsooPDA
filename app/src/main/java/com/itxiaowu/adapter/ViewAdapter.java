@@ -78,7 +78,7 @@ public class ViewAdapter extends BaseAdapter
     {
         this.context = context;
         this.res = res;
-        Log.d("ZXW", "ViewAdapter ���캯��");
+
     }
 
     @Override
@@ -136,35 +136,6 @@ public class ViewAdapter extends BaseAdapter
     
     
 
-//    public void setAsPackageText(int index) {
-//        try {
-//            if (index < 0)
-//                return;
-//            ListItem item = textIdList.get(index);
-//            item.setPackage(true);
-//            item.setImage(res.getDrawable(R.drawable.package1));
-//            notifyDataSetChanged();
-//        }
-//        catch(Exception ex)
-//        {
-//         //   logger.e(ex);
-//        }
-//    }
-
-//    public void addPackageText(String text) {
-//        try {
-//            ListItem item = new ListItem();
-//            item.setPackage(true);
-//            item.setTitle(text);
-//            item.setImage(res.getDrawable(R.drawable.package1));
-//            textIdList.add(item);
-//            notifyDataSetChanged();
-//        }
-//        catch(Exception ex)
-//        {
-//           // logger.e(ex);
-//        }
-//    }
 
     public void remove(int index)
     {

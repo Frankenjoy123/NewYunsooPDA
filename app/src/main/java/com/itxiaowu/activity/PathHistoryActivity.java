@@ -7,6 +7,7 @@ import android.widget.ListView;
 
 import com.itxiaowu.adapter.PathAdapter;
 import com.itxiaowu.fileOpreation.FileRead;
+import com.itxiaowu.view.TitleBar;
 
 import java.util.List;
 
@@ -15,12 +16,20 @@ public class PathHistoryActivity extends Activity {
 	private PathAdapter historyAdapter;
 	private List<String> historyList;
 	private FileRead historyFileReader;
+    private TitleBar titleBar;
 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_path_history);
+
+        getActionBar().hide();
+        titleBar=(TitleBar) findViewById(R.id.pathHistory_title_bar);
+        titleBar.setMode(TitleBar.TitleBarMode.LEFT_BUTTON);
+        titleBar.setDisplayAsBack(true);
+        titleBar.setTitle("物流扫描历史");
+
 		historyFileReader=new FileRead("Path_");
 		Time time=new Time();
 		time.setToNow();

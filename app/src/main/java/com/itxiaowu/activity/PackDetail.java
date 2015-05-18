@@ -2,23 +2,31 @@ package com.itxiaowu.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Shader;
 import android.os.Bundle;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.itxiaowu.adapter.ProductInPackageAdapter;
 import com.itxiaowu.unity.PackageDetail;
+import com.itxiaowu.view.TitleBar;
 
 public class PackDetail extends Activity {
 	private TextView tv_packageID;
 	private ListView lv_productInPack;
 	private ProductInPackageAdapter adapter;
-
+    private TitleBar titleBar;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pack_detail);
-		
+        getActionBar().hide();
+
+        titleBar=(TitleBar) findViewById(R.id.packDetail_title_bar);
+        titleBar.setMode(TitleBar.TitleBarMode.LEFT_BUTTON);
+        titleBar.setDisplayAsBack(true);
+        titleBar.setTitle("包内清单");
+
 		Intent intent=getIntent();
 		PackageDetail detail=(PackageDetail) intent.getSerializableExtra("detail");
 		tv_packageID=(TextView) findViewById(R.id.tv_packageID);

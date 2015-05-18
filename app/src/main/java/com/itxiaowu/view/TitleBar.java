@@ -79,7 +79,6 @@ public class TitleBar extends FrameLayout {
 
         }
 
-
     }
 
     public void setOnLeftButtonClickedListener(OnClickListener listener) {

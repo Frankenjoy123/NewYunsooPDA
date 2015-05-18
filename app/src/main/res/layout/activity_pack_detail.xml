@@ -3,25 +3,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="${relativePackage}.${activityClass}" >
+    <com.itxiaowu.view.TitleBar
+        android:id="@+id/packDetail_title_bar"
+        layout="@layout/title_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
 
     <LinearLayout
+
         android:id="@+id/ll_packhis"
          android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/packDetail_title_bar"
         android:orientation="horizontal">
         
-        <TextView 
-         
+        <TextView
             android:layout_width="0dp"
             android:layout_weight="0.3"
             android:layout_height="wrap_content"
-            android:textSize="30sp"
+            android:textSize="20sp"
             android:text="包装码"/>
         <TextView 
             android:id="@+id/tv_packageID"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.7"
+            android:textSize="15sp"
             
             />
         

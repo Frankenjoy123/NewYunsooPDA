@@ -11,7 +11,6 @@ import java.io.File;
 public class FileOperation {
 
     private static final String FOLDERNAME = "/yunsoo";
-//    private static final String FILENAME = "/YunSooFile_";
 
     public static String createNewFileName(String FILENAME) {
         String fileName;
