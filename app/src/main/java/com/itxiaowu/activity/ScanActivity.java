@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -83,6 +84,8 @@ public class ScanActivity extends Activity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+
+
 		Log.d("ZXW", "MainActivity onCreate");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
