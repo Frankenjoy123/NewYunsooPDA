@@ -35,33 +35,39 @@ public class PackedHistoryActivity extends Activity {
         titleBar.setTitle("打包历史");
 		
 		lv=(ListView) findViewById(R.id.lv_hasPacked);
-		PackDetailFileRead detailFileReader=new PackDetailFileRead("Pack_");
-		Time time=new Time();
-		time.setToNow();
-		detailList=detailFileReader.getPackageDetailList(time);
-		
-		adapter=new PackageHistoryAdapter(this, getResources());
-		adapter.setPackageDetailList(detailList);
-		lv.setAdapter(adapter);
-		
-		lv.setOnItemClickListener(new OnItemClickListener() {
 
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
 
-				Intent intent=new Intent(PackedHistoryActivity.this, 
-						PackDetail.class);
-				PackageDetail detail=detailList.get(position);
-				
-				Bundle bundle=new Bundle();
-				bundle.putSerializable("detail", detail);
-				intent.putExtras(bundle);
-				
-				startActivity(intent);
-			}
-			
-		});
+        try {
+            PackDetailFileRead detailFileReader=new PackDetailFileRead("Pack_");
+            Time time=new Time();
+            time.setToNow();
+            detailList=detailFileReader.getPackageDetailList(time);
+
+            adapter=new PackageHistoryAdapter(this, getResources());
+            adapter.setPackageDetailList(detailList);
+            lv.setAdapter(adapter);
+
+            lv.setOnItemClickListener(new OnItemClickListener() {
+
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view,
+                                        int position, long id) {
+
+                    Intent intent=new Intent(PackedHistoryActivity.this,
+                            PackDetail.class);
+                    PackageDetail detail=detailList.get(position);
+
+                    Bundle bundle=new Bundle();
+                    bundle.putSerializable("detail", detail);
+                    intent.putExtras(bundle);
+
+                    startActivity(intent);
+                }
+
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 	}
 }

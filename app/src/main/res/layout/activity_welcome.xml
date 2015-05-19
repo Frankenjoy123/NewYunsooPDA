@@ -21,4 +21,14 @@
         android:text="进入物流环节"
         android:textSize="30sp"/>
 
+    <Button
+        android:id="@+id/btn_fix_pack"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_below="@+id/btn_path_page"
+        android:layout_marginTop="50dp"
+        android:text="修改包装"
+        android:textSize="30sp"
+        />
+
 </RelativeLayout>

@@ -6,6 +6,7 @@ import android.text.format.Time;
 import com.itxiaowu.unity.PackageDetail;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileNotFoundException;
@@ -24,17 +25,71 @@ public class PackDetailFileRead {
 	private String mouthString;
 	private String dayString;
     private String yesterdayString;
+    private File fixedFile;
 
 	private List<PackageDetail> packageDetailList;
-	
-	
 
-	public PackDetailFileRead(String prefix) {
+    public File getFixedFile() {
+        return fixedFile;
+    }
+
+    public PackDetailFileRead(String prefix) {
 		super();
 		this.prefix = prefix;
 	}
 
+    public List<String> getProductsByPackCode(String packCode){
+        List<String> resultList=new ArrayList<String>();
+        File parentFile=new File(Environment.getExternalStorageDirectory()+FOLDERNAME);
+        File[] childrenFiles= parentFile.listFiles(new FileFilter() {
 
+            @Override
+            public boolean accept(File pathname) {
+
+                if(pathname.getName().startsWith(prefix)){
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        for(int i=0;i<childrenFiles.length;i++){
+            File childFile=childrenFiles[i];
+            try {
+
+                BufferedReader br=new BufferedReader(new FileReader(childFile));
+//                BufferedWriter bw;
+//                bw.
+
+                while((lineString=br.readLine())!=null){
+
+
+
+                    String[] arrayStrings=lineString.split(",");
+
+                    if(arrayStrings[1].equals(packCode)){
+                        fixedFile=childFile;
+
+                        for(int j=2;j<arrayStrings.length;j++){
+                            resultList.add(arrayStrings[j]);
+                        }
+//                        return resultList;
+                    }
+
+
+                }
+
+            } catch (FileNotFoundException e) {
+
+                e.printStackTrace();
+            } catch (IOException e) {
+
+                e.printStackTrace();
+            }
+        }
+        return  resultList;
+
+    }
 
 	public  List<PackageDetail> getPackageDetailList(Time nowTime) {
 		
@@ -85,11 +140,7 @@ public class PackDetailFileRead {
 					packageDetailList.add(packageDetail);
 										
 				}
-				
-				
-				
-				
-				
+
 			} catch (FileNotFoundException e) {
 
 				e.printStackTrace();

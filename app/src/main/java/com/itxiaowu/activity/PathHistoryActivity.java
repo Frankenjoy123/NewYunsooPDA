@@ -30,15 +30,19 @@ public class PathHistoryActivity extends Activity {
         titleBar.setDisplayAsBack(true);
         titleBar.setTitle("物流扫描历史");
 
-		historyFileReader=new FileRead("Path_");
-		Time time=new Time();
-		time.setToNow();
-		historyList=historyFileReader.getKeyList(time);
-		
-		lv_pathHistory=(ListView) findViewById(R.id.lv_pathHistory);
-		historyAdapter=new PathAdapter(this, getResources());
-		historyAdapter.setKeyList(historyList);
-		lv_pathHistory.setAdapter(historyAdapter);
-		
-	}
+        try {
+            historyFileReader=new FileRead("Path_");
+            Time time=new Time();
+            time.setToNow();
+            historyList=historyFileReader.getKeyList(time);
+
+            lv_pathHistory=(ListView) findViewById(R.id.lv_pathHistory);
+            historyAdapter=new PathAdapter(this, getResources());
+            historyAdapter.setKeyList(historyList);
+            lv_pathHistory.setAdapter(historyAdapter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 }

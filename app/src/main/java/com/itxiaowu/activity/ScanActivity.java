@@ -426,6 +426,7 @@ public class ScanActivity extends Activity {
             String str = formatter.format(curDate);
             content = str + "," + content;
             content += "\r\n";
+//            bw.
             bw.write(content);
             bw.flush();
             return true;

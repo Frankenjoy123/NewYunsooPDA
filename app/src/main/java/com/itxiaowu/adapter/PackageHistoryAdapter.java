@@ -32,7 +32,6 @@ public class PackageHistoryAdapter extends BaseAdapter
         this.context = context;
         this.res = res;
 
-        
     }
     
 
