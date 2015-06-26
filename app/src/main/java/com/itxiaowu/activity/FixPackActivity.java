@@ -14,8 +14,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.itxiaowu.adapter.ProductInPackageAdapter;
+import com.itxiaowu.fileOpreation.FileOperation;
 import com.itxiaowu.fileOpreation.PackDetailFileRead;
-import com.itxiaowu.utils.StringUtils;
+import com.itxiaowu.util.StringUtils;
 import com.itxiaowu.view.TitleBar;
 
 import java.io.File;
@@ -26,6 +27,7 @@ public class FixPackActivity extends Activity {
     private TitleBar titleBar;
     private EditText et_fix_barcode;
     private List<String> productCodes;
+    private List<String> originalCodes;
     private ProductInPackageAdapter adapter;
     private ListView lv_fix_products;
     private EditText et_get_packCode;
@@ -35,11 +37,13 @@ public class FixPackActivity extends Activity {
     PackDetailFileRead fileRead;
     private File fixedFile;
 
+    private String correctString;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fix_pack);
-
+//        correctString="";
         getActionBar().hide();
         titleBar=(TitleBar) findViewById(R.id.fix_title_bar);
         titleBar.setMode(TitleBar.TitleBarMode.BOTH_BUTTONS);
@@ -50,17 +54,32 @@ public class FixPackActivity extends Activity {
             titleBar.setOnRightButtonClickedListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                       fixedFile=fileRead.getFixedFile();
+                    if(originalSize>0){
 
+                        fixedFile=fileRead.getFixedFile();
+                        StringBuilder sb=new StringBuilder("");
+                        sb.append(fileRead.getFixPreString());
+
+                        for (int i=0;i<productCodes.size();i++){
+                            sb.append(","+productCodes.get(i));
+                        }
+
+
+                        FileOperation.replaceTxtByStr(fileRead.getFixedLineString(),sb.toString(),fixedFile);
+                        finish();
+
+                    }
 
                 }
             });
+
         } catch (Exception e) {
             finish();
             e.printStackTrace();
         }
 
         productCodes=new ArrayList<String>();
+        originalCodes=new ArrayList<String>();
         adapter=new ProductInPackageAdapter(FixPackActivity.this,getResources());
         adapter.setProductIdList(productCodes);
         lv_fix_products= (ListView) findViewById(R.id.lv_fix_products);
@@ -123,6 +142,12 @@ public class FixPackActivity extends Activity {
                     productCodes.add(string);
 
                 }
+                else{
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            "该包已装满，请按完成", Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER , 0, 0);
+                    toast.show();
+                }
 
             }
         });
@@ -152,15 +177,23 @@ public class FixPackActivity extends Activity {
 
                 try {
                     fileRead=new PackDetailFileRead("Pack_");
+                    correctString=fileRead.getFixedLineString();
+
                     productCodes.addAll(fileRead.getProductsByPackCode(string));
+
+                    originalCodes.addAll(productCodes);
                     originalSize=productCodes.size();
+//                    for(int i=0;i<originalSize;i++){
+//                        correctString.replace(","+originalCodes.get(i),"");
+//                    }
+
                     adapter.notifyDataSetChanged();
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast toast = Toast.makeText(getApplicationContext(),
                             "找不到该包装码", Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.BOTTOM , 0, 0);
+                    toast.setGravity(Gravity.CENTER , 0, 0);
                     toast.show();
                 }
             }

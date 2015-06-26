@@ -17,4 +17,20 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
+    <style name="text_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16dp</item>
+
+    </style>
+
+    <style name="SplashTheme" parent="android:Theme.Holo.Light.NoActionBar.Fullscreen">
+        <!--<item name="android:windowBackground">@drawable/welcome</item>-->
+        <item name="android:activityOpenEnterAnimation">@anim/anim_enter</item>
+        <item name="android:activityOpenExitAnimation">@anim/anim_exit</item>
+        <item name="android:activityCloseEnterAnimation">@anim/back_enter</item>
+        <item name="android:activityCloseExitAnimation">@anim/back_exit</item>
+        <!-- <item name="android:windowAnimationStyle">@style/activity_animation</item> -->
+    </style>
+
 </resources>

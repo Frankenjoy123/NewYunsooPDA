@@ -1,4 +1,4 @@
-package com.itxiaowu.utils;
+package com.itxiaowu.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

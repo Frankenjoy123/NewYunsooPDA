@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -88,7 +87,7 @@ public class ScanActivity extends Activity {
 
 		Log.d("ZXW", "MainActivity onCreate");
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_scan);
         //	private int[] standards=new int[]{5,10,20,30,50};
         standards.add(5);
         standards.add(10);

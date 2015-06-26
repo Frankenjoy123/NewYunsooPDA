@@ -23,7 +23,7 @@ import android.widget.Toast;
 
 import com.itxiaowu.adapter.PathAdapter;
 import com.itxiaowu.fileOpreation.FileOperation;
-import com.itxiaowu.utils.StringUtils;
+import com.itxiaowu.util.StringUtils;
 import com.itxiaowu.view.TitleBar;
 
 import java.io.BufferedWriter;

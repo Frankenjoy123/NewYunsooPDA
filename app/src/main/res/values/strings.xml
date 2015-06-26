@@ -91,5 +91,8 @@
     <string name="product_barcode">产品码</string>
     <string name="title_activity_fix_pack">FixPackActivity</string>
     <string name="fix_tip">小提示：扫描包装码获取包内产品</string>
+    <string name="device_no_authorize"> 设备未授权</string>
+    <string name="scan_anthorize_code">请扫描授权码</string>
+    <string name="company_name">广州云溯科技有限公司</string>
 
 </resources>

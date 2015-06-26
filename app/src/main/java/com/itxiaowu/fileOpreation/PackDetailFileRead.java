@@ -19,6 +19,7 @@ public class PackDetailFileRead {
 	private static String FOLDERNAME="/yunsoo";
 	private  String prefix;
 	private String lineString;
+    private String fixedLineString;
 	private List<String> keysList=new ArrayList<String>();
 	
 	private int i_year;
@@ -28,6 +29,11 @@ public class PackDetailFileRead {
     private File fixedFile;
 
 	private List<PackageDetail> packageDetailList;
+    private String fixedPreString;
+
+    public String getFixPreString() {
+        return fixedPreString;
+    }
 
     public File getFixedFile() {
         return fixedFile;
@@ -37,6 +43,10 @@ public class PackDetailFileRead {
 		super();
 		this.prefix = prefix;
 	}
+
+    public String getFixedLineString() {
+        return fixedLineString;
+    }
 
     public List<String> getProductsByPackCode(String packCode){
         List<String> resultList=new ArrayList<String>();
@@ -58,8 +68,6 @@ public class PackDetailFileRead {
             try {
 
                 BufferedReader br=new BufferedReader(new FileReader(childFile));
-//                BufferedWriter bw;
-//                bw.
 
                 while((lineString=br.readLine())!=null){
 
@@ -69,6 +77,8 @@ public class PackDetailFileRead {
 
                     if(arrayStrings[1].equals(packCode)){
                         fixedFile=childFile;
+                        fixedPreString=arrayStrings[0]+","+arrayStrings[1];
+                        fixedLineString=lineString;
 
                         for(int j=2;j<arrayStrings.length;j++){
                             resultList.add(arrayStrings[j]);
@@ -90,6 +100,8 @@ public class PackDetailFileRead {
         return  resultList;
 
     }
+
+
 
 	public  List<PackageDetail> getPackageDetailList(Time nowTime) {
 		
