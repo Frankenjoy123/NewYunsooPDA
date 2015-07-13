@@ -1,9 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.itxiaowu.activity.SettingActivity">
+    tools:context="com.yunsoo.activity.SettingActivity">
 
-    <com.itxiaowu.view.TitleBar
+    <com.yunsoo.view.TitleBar
         android:id="@+id/setting_title_bar"
         layout="@layout/title_bar_layout"
         android:layout_width="match_parent"
