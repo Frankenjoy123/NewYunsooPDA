@@ -12,7 +12,7 @@
         android:layout_alignParentTop="true" />
 
     <LinearLayout
-        android:id="@+id/linearLayout_standard"
+        android:id="@+id/ll_standard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
@@ -20,15 +20,15 @@
         android:orientation="horizontal" >
 
         <TextView
-            android:id="@+id/text_view1"
+            android:id="@+id/tv_standard_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="规格:"
+            android:text="@string/standard"
             android:textSize="30sp" />
 
         <TextView
-            android:id="@+id/input"
+            android:id="@+id/tv_standard_value"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -41,11 +41,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:gravity="center_horizontal"
-            android:text="个/箱"
+            android:text="@string/per"
             android:textSize="30sp" />
 
         <ImageView
-            android:id="@+id/down_arrow"
+            android:id="@+id/iv_down_arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -54,10 +54,10 @@
     </LinearLayout>
     
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/et_get_product_key"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_below="@id/linearLayout_standard"
+        android:layout_below="@id/ll_standard"
         android:layout_marginTop="30dp"
         android:editable="false" 
         android:background="@null"
@@ -69,7 +69,7 @@
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/editText"
+        android:layout_below="@id/et_get_product_key"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp" />
@@ -80,12 +80,12 @@
           android:layout_below="@id/progressBar1"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="正在进行:0/5"
+          android:text="@string/proceeding"
           android:textSize="20sp"
           android:layout_marginLeft="10dp" />
       
           <EditText
-        android:id="@+id/package_key_edittext"
+        android:id="@+id/et_get_pack_key"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_below="@id/progressText"
@@ -93,33 +93,38 @@
         android:editable="false" 
         android:background="@null"
         android:gravity="center_horizontal"
-        /> 
-        
+        />
     <TextView
-        android:id="@+id/finish_package_text"
+        android:id="@+id/tv_note_scan"
+        android:layout_below="@id/et_get_pack_key"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_packageActivityFinish"
+        android:text="@string/please_scan_package_key"
+        android:textSize="20sp"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible"
+        />
+        
+    <TextView
+        android:id="@+id/tv_has_finish_pack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:text="今日已打包：0箱"
-        android:layout_marginBottom="10dp"
+        android:text="@string/today_count"
+        android:layout_marginBottom="20dp"
         android:textSize="20sp" />
     <Button 
         android:id="@+id/btn_getPackages"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/btn_packageActivityFinish"
-        android:layout_alignParentRight="true"
-        android:text="查看已打包装"/>
-    
-    <Button 
-        android:id="@+id/btn_packageActivityFinish"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:text="返回"
-        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        />
-    
+        android:layout_alignParentRight="true"
+        android:textColor="@color/clear_color"
+        android:background="@drawable/btn_bg"
+        android:layout_marginRight="10dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:text="查看已打包装"/>
 
 </RelativeLayout>

@@ -139,17 +139,19 @@ public class PackDetailFileRead {
 					PackageDetail packageDetail=new PackageDetail();
 					
 					String[] arrayStrings=lineString.split(",");
-					packageDetail.setPackageId(arrayStrings[1]);
-					
-					List<String> products=new ArrayList<String>();
-					
-					for(int j=2;j<arrayStrings.length;j++){
-						products.add(arrayStrings[j]);						
-					}
-					packageDetail.setProductIdList(products);
-					
-					packageDetailList.add(packageDetail);
-										
+                    if (arrayStrings!=null&&arrayStrings.length>2){
+                        packageDetail.setPackageId(arrayStrings[1]);
+
+                        List<String> products=new ArrayList<String>();
+
+                        for(int j=2;j<arrayStrings.length;j++){
+                            products.add(arrayStrings[j]);
+                        }
+                        packageDetail.setProductIdList(products);
+
+                        packageDetailList.add(packageDetail);
+                    }
+
 				}
 
 			} catch (FileNotFoundException e) {

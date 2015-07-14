@@ -60,29 +60,39 @@ public class PathActivity extends Activity {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_path);
+        init();
+	}
 
-		preferences=getSharedPreferences("pathActivityPre", Context.MODE_PRIVATE);
-		editor=preferences.edit();
-		prevFileName=preferences.getString("prevFileName", "");
-		
-		final TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
-		 
-	    final String tmDevice, tmSerial, tmPhone, androidId;
-	    tmDevice = "" + tm.getDeviceId();
-	    tmSerial = "" + tm.getSimSerialNumber();
-	    androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-	 
-	    UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
-	    uniqueId = deviceUuid.toString();
-		
-		getActionBar().hide();
-		keys=new ArrayList<String>();
-		titleBar=(TitleBar) findViewById(R.id.title_bar);
+    private void init() {
+
+        preferences=getSharedPreferences("pathActivityPre", Context.MODE_PRIVATE);
+        editor=preferences.edit();
+        prevFileName=preferences.getString("prevFileName", "");
+
+        final TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
+
+        final String tmDevice, tmSerial, tmPhone, androidId;
+        tmDevice = "" + tm.getDeviceId();
+        tmSerial = "" + tm.getSimSerialNumber();
+        androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+
+        UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
+        uniqueId = deviceUuid.toString();
+
+        getActionBar().hide();
+        keys=new ArrayList<String>();
+        titleBar=(TitleBar) findViewById(R.id.title_bar);
         titleBar.setMode(TitleBar.TitleBarMode.LEFT_BUTTON);
         titleBar.setDisplayAsBack(true);
         titleBar.setTitle("物流扫描");
-        
+
         btnSubmit=(Button) findViewById(R.id.btn_submitPath);
+        if(keys==null|| keys.size()==0){
+            btnSubmit.setEnabled(false);
+        }
+        else {
+            btnSubmit.setEnabled(false);
+        }
         bindSubmit();
         lv_path=(ListView) findViewById(R.id.lv_path);
         adaper=new PathAdapter(this, getResources());
@@ -90,23 +100,21 @@ public class PathActivity extends Activity {
 
         lv_path.setAdapter(adaper);
         bindTextChanged();
-        
-		btnPathHistory=(Button) findViewById(R.id.btn_pathHistory);
-		btnPathHistory.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
 
-				Intent intent=new Intent(PathActivity.this,PathHistoryActivity.class);
-				startActivity(intent);
-			}
-		});
-	}
-        
-	
-	
+        btnPathHistory=(Button) findViewById(R.id.btn_pathHistory);
+        btnPathHistory.setOnClickListener(new OnClickListener() {
 
-	@Override
+            @Override
+            public void onClick(View v) {
+
+                Intent intent=new Intent(PathActivity.this,PathHistoryActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+
+    @Override
 	protected void onPause() {
 
 		editor.putString("prevFileName", prevFileName);
@@ -135,6 +143,12 @@ public class PathActivity extends Activity {
 					Boolean result=writeFile(saveContent);
 					if (result) {
 						keys.clear();
+                        if (keys==null||keys.size()==0){
+                            btnSubmit.setEnabled(false);
+                        }
+                        else {
+                            btnSubmit.setEnabled(true);
+                        }
 						adaper.notifyDataSetChanged();
 					}
 				}
@@ -217,6 +231,12 @@ public class PathActivity extends Activity {
                         }
                     }
                     keys.add(StringUtils.replaceBlank(StringUtils.getLastString(string)));
+                    if (keys==null||keys.size()==0){
+                        btnSubmit.setEnabled(false);
+                    }
+                    else {
+                        btnSubmit.setEnabled(true);
+                    }
 
                     adaper.notifyDataSetChanged();
 					

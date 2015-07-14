@@ -69,8 +69,6 @@ public class ScanActivity extends Activity {
     private EditText package_key_EditText;
     private TextView finish_package_text;
     
-    private Button btn_packageActivityFinish;
-    
     private LinearLayout linearLayout_standard;
     
     SoundPool soundPool;
@@ -80,6 +78,7 @@ public class ScanActivity extends Activity {
 	
 	private Button btn_getPackages;
 
+    private TextView tv_note_scan_pack;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -112,19 +111,20 @@ public class ScanActivity extends Activity {
         });
 		
 		listItems=new ArrayList<ListItem>();
-		input = (TextView) findViewById(R.id.input);
-		package_key_EditText=(EditText) findViewById(R.id.package_key_edittext);
+		input = (TextView) findViewById(R.id.tv_standard_value);
+		package_key_EditText=(EditText) findViewById(R.id.et_get_pack_key);
 		package_key_EditText.setTextColor(0x00000000);
 		
-		finish_package_text=(TextView) findViewById(R.id.finish_package_text);
+		finish_package_text=(TextView) findViewById(R.id.tv_has_finish_pack);
 		
-		downArrow = (ImageView) findViewById(R.id.down_arrow);
+		downArrow = (ImageView) findViewById(R.id.iv_down_arrow);
 		progressBar=(ProgressBar) findViewById(R.id.progressBar1);
 		progressText=(TextView) findViewById(R.id.progressText);
-		linearLayout_standard=(LinearLayout) findViewById(R.id.linearLayout_standard);
+		linearLayout_standard=(LinearLayout) findViewById(R.id.ll_standard);
 		btn_getPackages=(Button) findViewById(R.id.btn_getPackages);
-		bindGetHistoryPackages();
+        tv_note_scan_pack= (TextView) findViewById(R.id.tv_note_scan);
 
+		bindGetHistoryPackages();
 
 		
 		soundPool=new SoundPool(2, AudioManager.STREAM_SYSTEM, 5);
@@ -136,12 +136,7 @@ public class ScanActivity extends Activity {
 		bindPackageKeyChanged();
 		progressBar.setMax(5);
 		progressBar.setProgress(0);
-		
-//		msgList = new ArrayList<String>();
-	
-//		for (int i = 0; i < standards.size(); i++) {
-//			msgList.add(""+standards.get(i)+"个/箱");
-//		}
+
 		
 		initListView();
 		
@@ -288,7 +283,7 @@ public class ScanActivity extends Activity {
 
 
     private void bindTextChanged(){
-		editText= (EditText) findViewById(R.id.editText);
+		editText= (EditText) findViewById(R.id.et_get_product_key);
 		editText.requestFocus();
 		
 		package_key_EditText.clearFocus();
@@ -339,6 +334,7 @@ public class ScanActivity extends Activity {
 					else if(count==standard) {
 						soundPool.play(soundMap.get(2), 1, 1, 0, 0, 1);
 						Log.d("ZXW", "count==standard");
+                        tv_note_scan_pack.setVisibility(View.VISIBLE);
 						editText.clearFocus();
 						package_key_EditText.requestFocus();
 						
@@ -405,6 +401,7 @@ public class ScanActivity extends Activity {
 
 		            editText.requestFocus();
 		            package_key_EditText.clearFocus();
+                    tv_note_scan_pack.setVisibility(View.INVISIBLE);
 
 		        }	
 			}
