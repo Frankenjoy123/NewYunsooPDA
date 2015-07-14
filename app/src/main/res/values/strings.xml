@@ -92,6 +92,7 @@
     <string name="please_scan_package_key">该包已装满，请扫描包装码</string>
     <string name="please_scan_product_key">请扫产品码</string>
     <string name="today_count" >今日已打包：0箱</string>
+    <string name="pack_count" >计数：</string>
     <string name="count_unit" >箱</string>
     <string name="pack_barcode">包装码</string>
     <string name="product_barcode">产品码</string>
@@ -103,6 +104,9 @@
     <string name="authorize_failed">授权失败，请重新扫描</string>
     <string name="company_name">广州云溯科技有限公司</string>
     <string name="title_activity_authorize">AuthorizeActivity</string>
+
+    <string name="cancel">取消</string>
+    <string name="save">保存</string>
 
 
 </resources>

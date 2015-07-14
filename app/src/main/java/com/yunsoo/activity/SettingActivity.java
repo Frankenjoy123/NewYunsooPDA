@@ -16,7 +16,7 @@ public class SettingActivity extends Activity {
     private int finishedBags;
     private int standard;
     private Intent intent;
-    private Button confirm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,9 +24,11 @@ public class SettingActivity extends Activity {
         getActionBar().hide();
 
         titleBar=(TitleBar) findViewById(R.id.setting_title_bar);
-        titleBar.setMode(TitleBar.TitleBarMode.LEFT_BUTTON);
+        titleBar.setMode(TitleBar.TitleBarMode.BOTH_BUTTONS);
         titleBar.setDisplayAsBack(true);
         titleBar.setTitle(getString(R.string.settings));
+        titleBar.setLeftButtonText(getString(R.string.cancel));
+        titleBar.setRightButtonText(getString(R.string.save));
 
         intent=getIntent();
         finishedBags=intent.getIntExtra("finishedBags",0);
@@ -34,11 +36,11 @@ public class SettingActivity extends Activity {
 
         et_count= (EditText) findViewById(R.id.et_count);
         et_standard= (EditText) findViewById(R.id.et_standard);
-        confirm=(Button)findViewById(R.id.btn_setting_confirm);
+
         et_count.setText(String.valueOf(finishedBags));
         et_standard.setText(String.valueOf(standard));
 
-        confirm.setOnClickListener(new View.OnClickListener() {
+        titleBar.setOnRightButtonClickedListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 intent.putExtra("edit_count",
@@ -49,7 +51,6 @@ public class SettingActivity extends Activity {
                 SettingActivity.this.finish();
             }
         });
-
 
     }
 

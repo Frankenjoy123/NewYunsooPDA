@@ -21,7 +21,7 @@
             android:id="@+id/tv_standard_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.3"
+            android:layout_weight="0.4"
             android:text="@string/standard"
             android:textSize="30sp"
             />
@@ -56,10 +56,10 @@
         <TextView
             android:id="@+id/tv_count_name"
             android:layout_width="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="0.4"
             android:textSize="30sp"
             android:layout_height="wrap_content"
-            android:text="@string/today_count"
+            android:text="@string/pack_count"
             />
 
         <EditText
@@ -73,7 +73,7 @@
         <TextView
             android:id="@+id/tv_count_unit"
             android:layout_width="0dp"
-            android:layout_weight="0.1"
+            android:layout_weight="0.3"
             android:layout_height="wrap_content"
             android:text="@string/count_unit"
             android:textSize="30sp"
@@ -82,12 +82,5 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btn_setting_confirm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:textSize="30sp"
-        android:text="确定"/>
 
 </RelativeLayout>
