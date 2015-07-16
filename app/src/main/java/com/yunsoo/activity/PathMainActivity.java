@@ -1,33 +1,30 @@
 package com.yunsoo.activity;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class MainActivity extends BaseActivity implements OnClickListener{
+import com.yunsoo.activity.R;
 
-    private RelativeLayout rl_pack_scan;
-    private RelativeLayout rl_path_scan;
-    private RelativeLayout rl_modify_package;
+public class PathMainActivity extends BaseActivity implements View.OnClickListener {
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		getActionBar().hide();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_path_main);
+        getActionBar().hide();
         setupActionItems();
-	}
+    }
 
     private void setupActionItems() {
 
-        buildViewContent(this.findViewById(R.id.rl_yunsoo_pack), R.drawable.ic_pack, R.string.yunsoo_pack);
-        buildViewContent(this.findViewById(R.id.rl_yunsoo_path), R.drawable.ic_delivery, R.string.yunsoo_path);
+        buildViewContent(this.findViewById(R.id.rl_path_scan), R.drawable.ic_delivery, R.string.path_scan);
+        buildViewContent(this.findViewById(R.id.rl_path_sync), R.drawable.ic_synchronize, R.string.sync_path);
 //        buildViewContent(this.findViewById(R.id.rl_modify_package), R.drawable.ic_modify_package, R.string.modify_package);
 
     }
@@ -43,14 +40,14 @@ public class MainActivity extends BaseActivity implements OnClickListener{
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.rl_yunsoo_pack:
-                Intent intent1=new Intent(MainActivity.this,PackMainActivity.class);
-				startActivity(intent1);
+            case R.id.rl_path_scan:
+                Intent intent1=new Intent(PathMainActivity.this,PathActivity.class);
+                startActivity(intent1);
                 break;
-            case R.id.rl_yunsoo_path:
-				Intent intent2=new Intent(MainActivity.this,PathMainActivity.class);
-				startActivity(intent2);
-                break;
+//            case R.id.rl_path_sync:
+//                Intent intent2=new Intent(MainActivity.this,PathActivity.class);
+//                startActivity(intent2);
+//                break;
 //            case R.id.rl_modify_package:
 //                Intent intent3=new Intent(MainActivity.this,FixPackActivity.class);
 //                startActivity(intent3);

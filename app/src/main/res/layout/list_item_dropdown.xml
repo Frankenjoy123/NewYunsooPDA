@@ -14,7 +14,9 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:text="300"
-        android:textSize="25sp"/>
+        android:textSize="25sp"
+        android:textColor="#000000"
+        />
     <!--<TextView-->
         <!--android:id="@+id/tv_scan_unit1"-->
         <!--android:layout_width="wrap_content"-->

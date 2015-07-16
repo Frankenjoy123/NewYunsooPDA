@@ -72,7 +72,7 @@ public class AuthUser implements JSONEntity {
 
     public void populate(JSONObject object) {
         userId = object.optString("user_id");
-        token = object.optString("t");
+        token = object.optString("token");
         phone = object.optString("phone");
 
     }

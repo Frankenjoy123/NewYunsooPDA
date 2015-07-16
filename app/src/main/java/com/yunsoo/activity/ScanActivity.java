@@ -25,6 +25,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yunsoo.fileOpreation.FileOperation;
+import com.yunsoo.sqlite.MyDataBaseHelper;
+import com.yunsoo.sqlite.SQLiteOperation;
 import com.yunsoo.unity.ListItem;
 import com.yunsoo.view.TitleBar;
 
@@ -79,23 +81,30 @@ public class ScanActivity extends Activity {
 	private Button btn_getPackages;
 
     private TextView tv_note_scan_pack;
+
+    MyDataBaseHelper dataBaseHelper;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
-
 		Log.d("ZXW", "MainActivity onCreate");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_scan);
+        init();
+	}
+
+    private void init() {
+        dataBaseHelper=new MyDataBaseHelper(this,"yunsoo_pda",null,1);
+
         //	private int[] standards=new int[]{5,10,20,30,50};
         standards.add(5);
         standards.add(10);
         standards.add(20);
         standards.add(30);
         standards.add(50);
-		
-		getActionBar().hide();
-		titleBar=(TitleBar) findViewById(R.id.package_title_bar);
+
+        getActionBar().hide();
+        titleBar=(TitleBar) findViewById(R.id.package_title_bar);
         titleBar.setMode(TitleBar.TitleBarMode.BOTH_BUTTONS);
         titleBar.setDisplayAsBack(true);
         titleBar.setTitle("打包扫描");
@@ -109,79 +118,79 @@ public class ScanActivity extends Activity {
                 startActivityForResult(intent, 200);
             }
         });
-		
-		listItems=new ArrayList<ListItem>();
-		input = (TextView) findViewById(R.id.tv_standard_value);
-		package_key_EditText=(EditText) findViewById(R.id.et_get_pack_key);
-		package_key_EditText.setTextColor(0x00000000);
-		
-		finish_package_text=(TextView) findViewById(R.id.tv_has_finish_pack);
-		
-		downArrow = (ImageView) findViewById(R.id.iv_down_arrow);
-		progressBar=(ProgressBar) findViewById(R.id.progressBar1);
-		progressText=(TextView) findViewById(R.id.progressText);
-		linearLayout_standard=(LinearLayout) findViewById(R.id.ll_standard);
-		btn_getPackages=(Button) findViewById(R.id.btn_getPackages);
+
+        listItems=new ArrayList<ListItem>();
+        input = (TextView) findViewById(R.id.tv_standard_value);
+        package_key_EditText=(EditText) findViewById(R.id.et_get_pack_key);
+        package_key_EditText.setTextColor(0x00000000);
+
+        finish_package_text=(TextView) findViewById(R.id.tv_has_finish_pack);
+
+        downArrow = (ImageView) findViewById(R.id.iv_down_arrow);
+        progressBar=(ProgressBar) findViewById(R.id.progressBar1);
+        progressText=(TextView) findViewById(R.id.progressText);
+        linearLayout_standard=(LinearLayout) findViewById(R.id.ll_standard);
+        btn_getPackages=(Button) findViewById(R.id.btn_getPackages);
         tv_note_scan_pack= (TextView) findViewById(R.id.tv_note_scan);
 
-		bindGetHistoryPackages();
+        bindGetHistoryPackages();
 
-		
-		soundPool=new SoundPool(2, AudioManager.STREAM_SYSTEM, 5);
-		soundMap=new HashMap<Integer, Integer>();
-		soundMap.put(1, soundPool.load(getApplicationContext(), R.raw.short_sound, 1));
-		soundMap.put(2, soundPool.load(getApplicationContext(), R.raw.long_sound, 1));
 
-		bindTextChanged();
-		bindPackageKeyChanged();
-		progressBar.setMax(5);
-		progressBar.setProgress(0);
+        soundPool=new SoundPool(2, AudioManager.STREAM_SYSTEM, 5);
+        soundMap=new HashMap<Integer, Integer>();
+        soundMap.put(1, soundPool.load(getApplicationContext(), R.raw.short_sound, 1));
+        soundMap.put(2, soundPool.load(getApplicationContext(), R.raw.long_sound, 1));
 
-		
-		initListView();
-		
-		linearLayout_standard.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				
-				System.out.println("=======");
+        bindTextChanged();
+        bindPackageKeyChanged();
+        progressBar.setMax(5);
+        progressBar.setProgress(0);
 
-				popWin = new PopupWindow(ScanActivity.this);
+        initListView();
+
+        linearLayout_standard.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                System.out.println("=======");
+
+                popWin = new PopupWindow(ScanActivity.this);
 //				popWin.setWidth(input.getWidth());
                 popWin.setWidth(200);
 
-				popWin.setHeight(300);
-				popWin.setContentView(listView);
-				popWin.setOutsideTouchable(true);
-				popWin.showAsDropDown(input, 0, 0);
-			}
-		});	
-		
+                popWin.setHeight(300);
+                popWin.setContentView(listView);
+                popWin.setOutsideTouchable(true);
+                popWin.showAsDropDown(input, 0, 0);
+            }
+        });
 
-		progressBar.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Bundle listItems_bundle=new Bundle();
-				ArrayList list=new ArrayList();				
-				ArrayList<String> titlesArrayList=new ArrayList<String>();
-				for (int i = 0; i < listItems.size(); i++) {
-					ListItem item=listItems.get(i);
-					titlesArrayList.add(item.getTitle());
-				}	
-				list.add(titlesArrayList);
-				Intent intent=new Intent(ScanActivity.this, ListActivity.class);
-				intent.putParcelableArrayListExtra("titles", list);
-				intent.putExtra("numPerGroup", standard);
-				Log.d("ZXW", "createIntent");
-				startActivityForResult(intent, 0);
-				Log.d("ZXW", "MainActivity startActivityForResult");
-			}
-		});
-	}
-	
-	private void bindGetHistoryPackages() {
+
+        progressBar.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Bundle listItems_bundle=new Bundle();
+                ArrayList list=new ArrayList();
+                ArrayList<String> titlesArrayList=new ArrayList<String>();
+                for (int i = 0; i < listItems.size(); i++) {
+                    ListItem item=listItems.get(i);
+                    titlesArrayList.add(item.getTitle());
+                }
+                list.add(titlesArrayList);
+                Intent intent=new Intent(ScanActivity.this, ListActivity.class);
+                intent.putParcelableArrayListExtra("titles", list);
+                intent.putExtra("numPerGroup", standard);
+                Log.d("ZXW", "createIntent");
+                startActivityForResult(intent, 0);
+                Log.d("ZXW", "MainActivity startActivityForResult");
+            }
+        });
+
+    }
+
+    private void bindGetHistoryPackages() {
 
 		btn_getPackages.setOnClickListener(new OnClickListener() {
 			
@@ -373,19 +382,25 @@ public class ScanActivity extends Activity {
 				
 				
 				String string=new StringBuilder(s.toString()).toString();
-
-				String saveContent="";
-				saveContent+=replaceBlank(getLastString(string))+",";
+                String pack_key=replaceBlank(getLastString(string));
+//				String saveContent="";
+//				saveContent+=replaceBlank(getLastString(string))+",";
+                StringBuilder builder=new StringBuilder();
 				for (int i = 0; i < listItems.size(); i++) {
 					ListItem item=listItems.get(i);
 					item.setPackage(true);
-					
-					saveContent+=item.getTitle()+",";													
+					builder.append(item.getTitle());
+                    if (i<listItems.size()-1){
+                        builder.append(",");
+                    }
+//					saveContent+=item.getTitle()+",";
 				}
-				saveContent=saveContent.substring(0, saveContent.lastIndexOf(','));
-				Boolean result=writeFile(saveContent);
-				Log.d("ZXW", "scanPackageKey result "+result.toString());
-		        if (result) {
+//				saveContent=saveContent.substring(0, saveContent.lastIndexOf(','));
+
+                SQLiteOperation.insertPackData(dataBaseHelper.getWritableDatabase(),pack_key,builder.toString(),"20150714");
+//				Boolean result=writeFile(saveContent);
+//				Log.d("ZXW", "scanPackageKey result "+result.toString());
+//		        if (result) {
 
 		            Toast toast = Toast.makeText(getApplicationContext(),
 		                    "打包完成", Toast.LENGTH_LONG);
@@ -403,7 +418,7 @@ public class ScanActivity extends Activity {
 		            package_key_EditText.clearFocus();
                     tv_note_scan_pack.setVisibility(View.INVISIBLE);
 
-		        }	
+//		        }
 			}
 		});
 
@@ -422,7 +437,7 @@ public class ScanActivity extends Activity {
             String str = formatter.format(curDate);
             content = str + "," + content;
             content += "\r\n";
-//            bw.
+//
             bw.write(content);
             bw.flush();
             return true;

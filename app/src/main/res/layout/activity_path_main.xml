@@ -1,9 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    tools:context="com.yunsoo.activity.MainActivity" >
+    tools:context="com.yunsoo.activity.PathMainActivity">
 
 
     <LinearLayout
@@ -13,17 +11,13 @@
 
         android:gravity="center">
         <include
-            android:id="@+id/rl_yunsoo_pack"
+            android:id="@+id/rl_path_scan"
             layout="@layout/action_item_layout_top_bottom" />
 
         <include
-            android:id="@+id/rl_yunsoo_path"
+            android:id="@+id/rl_path_sync"
             layout="@layout/action_item_layout_bottom" />
 
-        <!--<include-->
-            <!--android:id="@+id/rl_modify_package"-->
-            <!--layout="@layout/action_item_layout_bottom" />-->
-
-        </LinearLayout>
+    </LinearLayout>
 
 </RelativeLayout>

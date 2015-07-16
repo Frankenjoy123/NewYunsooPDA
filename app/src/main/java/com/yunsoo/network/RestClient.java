@@ -2,6 +2,7 @@ package com.yunsoo.network;
 
 import android.util.Log;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -11,8 +12,12 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
+
+import org.apache.http.entity.mime.FormBodyPart;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
@@ -136,7 +141,14 @@ public class RestClient {
                     } else if (filePost) {
                         String sFilePath = params.get(0).getValue();
                         // httpPost.setEntity(new FileEntity(new File(sFilePath), "binary/octet-stream"));
-                        httpPost.setEntity(new FileEntity(new File(sFilePath), "text/plain; charset=\"UTF-8\""));
+//                        httpPost.setEntity(new FileEntity(new File(sFilePath), "text/plain; charset=\"UTF-8\""));
+                        MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+                        File file = new File(sFilePath);
+                        entity.addPart(new FormBodyPart("file", new FileBody(file, file.getName(), "text/plain", "UTF-8")));
+
+
+                        httpPost.setEntity(entity);
+
                     } else {
                         httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
                     }
@@ -280,8 +292,8 @@ public class RestClient {
                     case HttpStatus.SC_FORBIDDEN:
                     case HttpStatus.SC_NOT_FOUND:
                     default:
-                        Log.e("tttttttttttttttt", "ffdfdfudf"+ statusCode + "  --" + request.getURI().toString());
-                        throw new ServerGeneralException("服务器发生了小状态，等等再试" , statusCode);
+                        Log.e("tttttttttttttttt", "ffdfdfudf" + statusCode + "  --" + request.getURI().toString());
+                        throw new ServerGeneralException("服务器发生了小状态，等等再试", statusCode);
                 }
 
             }

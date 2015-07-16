@@ -2,6 +2,9 @@ package com.yunsoo.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.text.format.Time;
 import android.view.View;
@@ -11,17 +14,23 @@ import android.widget.ListView;
 
 import com.yunsoo.adapter.PackageHistoryAdapter;
 import com.yunsoo.fileOpreation.PackDetailFileRead;
+import com.yunsoo.sqlite.MyDataBaseHelper;
+import com.yunsoo.sqlite.SQLiteOperation;
 import com.yunsoo.unity.PackageDetail;
+import com.yunsoo.util.Constants;
 import com.yunsoo.view.TitleBar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PackedHistoryActivity extends Activity {
 	
 	private ListView lv;
-	private List<PackageDetail> detailList;
+	private List<PackageDetail> detailList=new ArrayList<>();
 	private PackageHistoryAdapter adapter;
 	private TitleBar titleBar;
+
+    MyDataBaseHelper dataBaseHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +45,29 @@ public class PackedHistoryActivity extends Activity {
 		
 		lv=(ListView) findViewById(R.id.lv_hasPacked);
 
+        dataBaseHelper=new MyDataBaseHelper(this, Constants.SQ_DATABASE,null,1);
+        Cursor cursor=dataBaseHelper.getReadableDatabase().rawQuery("select * from pack", null);
+
+        while (cursor.moveToNext()){
+            String pack_key=cursor.getString(1);
+            String product_keys=cursor.getString(2);
+            PackageDetail packageDetail=new PackageDetail();
+            packageDetail.setPackageId(pack_key);
+            String[] arrayStrings=product_keys.split(",");
+            List<String> products=new ArrayList<String>();
+
+            for(int j=0;j<arrayStrings.length;j++){
+                products.add(arrayStrings[j]);
+            }
+            packageDetail.setProductIdList(products);
+            detailList.add(packageDetail);
+        }
 
         try {
-            PackDetailFileRead detailFileReader=new PackDetailFileRead("Pack_");
-            Time time=new Time();
-            time.setToNow();
-            detailList=detailFileReader.getPackageDetailList(time);
+//            PackDetailFileRead detailFileReader=new PackDetailFileRead("Pack_");
+//            Time time=new Time();
+//            time.setToNow();
+//            detailList=detailFileReader.getPackageDetailList(time);
 
             adapter=new PackageHistoryAdapter(this, getResources());
             adapter.setPackageDetailList(detailList);

@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import com.yunsoo.annotation.ViewById;
 //import com.itxiaowu.manager.DeviceGeoLocationManager;
 import com.yunsoo.manager.DeviceManager;
+import com.yunsoo.manager.FileManager;
 import com.yunsoo.manager.SessionManager;
 import com.yunsoo.network.CacheService;
 import com.yunsoo.network.NetworkManager;
@@ -40,10 +41,12 @@ public class WelcomeActivity extends BaseActivity{
         init();
         SessionManager sessionManager = SessionManager.initializeIntance(this);
         sessionManager.restore();
-        DeviceManager deviceManager= DeviceManager.initializeIntance(this);
+        DeviceManager deviceManager= DeviceManager.initializeIntance(this.getApplicationContext());
         NetworkManager.initializeIntance(this).isNetworkConnected();
 
         CacheService.initializeInstance(this);
+
+        FileManager.initializeIntance(this);
 
 
     /*    if (!SessionManager.getInstance().getAuthUser().isAuthorized()) {

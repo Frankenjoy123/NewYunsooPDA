@@ -17,6 +17,9 @@ public final class Constants {
 
 	public final static class Preference {
 		public final static String PREF_LOGIN = "login";
+
+        public final static String PREF_FILE="file_in";
+        public final static String PACK_FILE_LAST_INDEX="pack_file_index";
 		// json String
 		public final static String KEY_USER_INFO = "user_info";
 		
@@ -49,5 +52,11 @@ public final class Constants {
 	public static final String NA = "N/A";
 	
 	public static final String CODE_BASE_URL = "http://t.m.yunsu.co/";
+
+    public static final String SQ_DATABASE="yunsoo_pda";
+
+    public static final String YUNSOO_FOLDERNAME = "/yunsoo";
+
+    public static final String PACK_SYNC_TASK_FOLDER = "/pack/sync_task";
 
 }

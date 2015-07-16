@@ -23,6 +23,8 @@ import android.widget.Toast;
 
 import com.yunsoo.adapter.PathAdapter;
 import com.yunsoo.fileOpreation.FileOperation;
+import com.yunsoo.sqlite.MyDataBaseHelper;
+import com.yunsoo.sqlite.SQLiteOperation;
 import com.yunsoo.util.StringUtils;
 import com.yunsoo.view.TitleBar;
 
@@ -53,7 +55,7 @@ public class PathActivity extends Activity {
 	private String prevFileName;
 	private Button btnPathHistory;
 	
-	
+	private MyDataBaseHelper dataBaseHelper;
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +66,7 @@ public class PathActivity extends Activity {
 	}
 
     private void init() {
-
+        dataBaseHelper=new MyDataBaseHelper(this,"yunsoo_pda",null,1);
         preferences=getSharedPreferences("pathActivityPre", Context.MODE_PRIVATE);
         editor=preferences.edit();
         prevFileName=preferences.getString("prevFileName", "");
@@ -132,16 +134,15 @@ public class PathActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				if(!keys.isEmpty()){
-					String saveContent="";
-
+//					String saveContent="";
 					for (int i = 0; i < keys.size(); i++) {
-						
-						saveContent+=keys.get(i)+",";													
+                        SQLiteOperation.insertPathData(dataBaseHelper.getWritableDatabase(),keys.get(i),"InBase","20150715");
+//						saveContent+=keys.get(i)+",";
 					}
-					saveContent=saveContent.substring(0, saveContent.lastIndexOf(','));
+//					saveContent=saveContent.substring(0, saveContent.lastIndexOf(','));
 					
-					Boolean result=writeFile(saveContent);
-					if (result) {
+//					Boolean result=writeFile(saveContent);
+//					if (result) {
 						keys.clear();
                         if (keys==null||keys.size()==0){
                             btnSubmit.setEnabled(false);
@@ -150,7 +151,7 @@ public class PathActivity extends Activity {
                             btnSubmit.setEnabled(true);
                         }
 						adaper.notifyDataSetChanged();
-					}
+//					}
 				}
 
 			}

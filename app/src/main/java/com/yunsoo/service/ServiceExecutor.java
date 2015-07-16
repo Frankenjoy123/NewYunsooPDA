@@ -11,7 +11,7 @@ public class ServiceExecutor {
 	private static ServiceExecutor instance;
 
 	private ExecutorService services = Executors.newFixedThreadPool(6);
-	HashMap<DataServiceImpl, Future<?>> pendingTask = new HashMap<>();
+	HashMap<Runnable, Future<?>> pendingTask = new HashMap<>();
 
 	public synchronized static ServiceExecutor getInstance() {
 		if (instance == null) {
@@ -31,10 +31,12 @@ public class ServiceExecutor {
 		services.shutdown();
 	}
 
-	public void execute(DataServiceImpl dataServiceImpl) {
-		Future<?> task = services.submit(dataServiceImpl);		
-		pendingTask.put(dataServiceImpl, task);
+	public void execute(Runnable service) {
+		Future<?> task = services.submit(service);
+		pendingTask.put(service, task);
 	}
+
+
 
 	public void done(DataServiceImpl impl) {
 		pendingTask.remove(impl);

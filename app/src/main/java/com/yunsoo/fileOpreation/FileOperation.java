@@ -3,6 +3,8 @@ package com.yunsoo.fileOpreation;
 
 import android.text.format.Time;
 
+import com.yunsoo.manager.DeviceManager;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,6 +19,18 @@ import java.io.PrintWriter;
 public class FileOperation {
 
     private static final String FOLDERNAME = "/yunsoo";
+//    public static String createPackFileName() {
+//
+//        String folderName = android.os.Environment.getExternalStorageDirectory() + FOLDERNAME+"/pack/sync_task";
+//
+//        File file = new File(folderName);
+//        if (!file.exists())
+//            file.mkdirs();
+//
+//        fileName = folderName + DeviceManager.getInstance().getDeviceId()+;
+//
+//        return fileName;
+//    }
 
     public static String createNewFileName(String FILENAME) {
         String fileName;

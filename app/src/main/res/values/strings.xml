@@ -76,6 +76,15 @@
     <string name="pack_scan">打包扫描</string>
     <string name="path_scan">物流扫描</string>
     <string name="modify_package">修改包装</string>
+    <string name="sync_pack">同步包装</string>
+    <string name="sync_path">同步物流</string>
+    <string name="sync">同步</string>
+
+    <string name="yunsoo_pack">云溯打包</string>
+    <string name="yunsoo_path">云溯物流</string>
+
+    <string name="off_line_upload">离线上传</string>
+    <string name="wifi_upload">WIFI上传</string>
 
 
     <string name="settings">设置</string>
@@ -107,6 +116,16 @@
 
     <string name="cancel">取消</string>
     <string name="save">保存</string>
+    <string name="title_activity_pack_main">PackMainActivity</string>
+    <string name="title_activity_path_main">PathMainActivity</string>
+    <string name="title_activity_pack_sync">PackSyncActivity</string>
 
+    <string name="pack_sync">同步包装</string>
+    <string name="title_activity_off_line_upload">OffLineUploadActivity</string>
+
+    <string name="off_line_help">离线上传温馨提示：</string>
+    <string name="off_line_step_1">1.使用USB线连接PDA设备和电脑</string>
+    <string name="off_line_step_2">2.将SD卡/yunsoo/pack/sync_task的文件拷贝至电脑</string>
+    <string name="off_line_step_3">3.将SD卡/yunsoo/pack/sync_task中的文件移至/yunsoo/pack/sync_success中</string>
 
 </resources>

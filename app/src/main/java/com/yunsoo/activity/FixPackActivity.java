@@ -3,6 +3,7 @@ package com.yunsoo.activity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import com.yunsoo.adapter.ProductInPackageAdapter;
 import com.yunsoo.fileOpreation.FileOperation;
 import com.yunsoo.fileOpreation.PackDetailFileRead;
+import com.yunsoo.sqlite.MyDataBaseHelper;
 import com.yunsoo.util.StringUtils;
 import com.yunsoo.view.TitleBar;
 
@@ -39,12 +41,15 @@ public class FixPackActivity extends Activity {
 
     private String correctString;
 
+    private MyDataBaseHelper dataBaseHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fix_pack);
 //        correctString="";
         getActionBar().hide();
+        dataBaseHelper=new MyDataBaseHelper(this,"yunsoo_pda",null,1);
         titleBar=(TitleBar) findViewById(R.id.fix_title_bar);
         titleBar.setMode(TitleBar.TitleBarMode.BOTH_BUTTONS);
         titleBar.setDisplayAsBack(true);
@@ -56,16 +61,21 @@ public class FixPackActivity extends Activity {
                 public void onClick(View v) {
                     if(originalSize>0){
 
-                        fixedFile=fileRead.getFixedFile();
-                        StringBuilder sb=new StringBuilder("");
-                        sb.append(fileRead.getFixPreString());
+//                        fixedFile=fileRead.getFixedFile();
+//                        StringBuilder sb=new StringBuilder("");
+//                        sb.append(fileRead.getFixPreString());
+                        StringBuilder builder1=new StringBuilder();
 
                         for (int i=0;i<productCodes.size();i++){
-                            sb.append(","+productCodes.get(i));
+//                            sb.append(","+productCodes.get(i));
+                            builder1.append(productCodes.get(i));
+                            if (i<productCodes.size()-1){
+                                builder1.append(",");
+                            }
                         }
+                        dataBaseHelper.getWritableDatabase().execSQL("update pack set product_keys=?",new String[]{builder1.toString()});
 
-
-                        FileOperation.replaceTxtByStr(fileRead.getFixedLineString(),sb.toString(),fixedFile);
+//                        FileOperation.replaceTxtByStr(fileRead.getFixedLineString(),sb.toString(),fixedFile);
                         finish();
 
                     }
@@ -171,31 +181,53 @@ public class FixPackActivity extends Activity {
                 string=StringUtils.getLastString(StringUtils.replaceBlank(string));
                 et_fix_barcode.setText(string);
                 productCodes.clear();
-                et_get_packCode.clearFocus();
-                et_get_productCode.requestFocus();
 //                adapter.notifyDataSetChanged();
+                Cursor cursor=dataBaseHelper.getReadableDatabase().rawQuery("select * from pack where pack_key=?", new String[]{string});
+                if(cursor.getCount()>0){
+                    et_get_packCode.clearFocus();
+                    et_get_productCode.requestFocus();
+                    while (cursor.moveToNext()){
+                        String products=cursor.getString(2);
+                        String[] arrayStrings=products.split(",");
 
-                try {
-                    fileRead=new PackDetailFileRead("Pack_");
-                    correctString=fileRead.getFixedLineString();
-
-                    productCodes.addAll(fileRead.getProductsByPackCode(string));
-
+                        for(int j=0;j<arrayStrings.length;j++){
+                            productCodes.add(arrayStrings[j]);
+                        }
+                    }
                     originalCodes.addAll(productCodes);
                     originalSize=productCodes.size();
-//                    for(int i=0;i<originalSize;i++){
-//                        correctString.replace(","+originalCodes.get(i),"");
-//                    }
-
                     adapter.notifyDataSetChanged();
 
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } else {
                     Toast toast = Toast.makeText(getApplicationContext(),
                             "找不到该包装码", Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER , 0, 0);
                     toast.show();
                 }
+
+
+
+//                try {
+////                    fileRead=new PackDetailFileRead("Pack_");
+////                    correctString=fileRead.getFixedLineString();
+////
+////                    productCodes.addAll(fileRead.getProductsByPackCode(string));
+//
+//                    originalCodes.addAll(productCodes);
+//                    originalSize=productCodes.size();
+////                    for(int i=0;i<originalSize;i++){
+////                        correctString.replace(","+originalCodes.get(i),"");
+////                    }
+//
+//                    adapter.notifyDataSetChanged();
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    Toast toast = Toast.makeText(getApplicationContext(),
+//                            "找不到该包装码", Toast.LENGTH_SHORT);
+//                    toast.setGravity(Gravity.CENTER , 0, 0);
+//                    toast.show();
+//                }
             }
         });
     }
