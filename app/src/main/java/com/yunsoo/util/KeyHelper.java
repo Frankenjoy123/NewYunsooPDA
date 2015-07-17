@@ -8,9 +8,10 @@ import java.security.MessageDigest;
 public class KeyHelper {
 	public static String getWrappedKey(String sOriginKey) {
 
-		String sKey = SessionManager.getInstance().getId()
-				+ sOriginKey;
-		return sKey;
+//		String sKey = SessionManager.getInstance().getId()
+//				+ sOriginKey;
+//		return sKey;
+        return sOriginKey;
 	}
 
 	public static String getMD5String(String value) {

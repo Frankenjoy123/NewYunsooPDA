@@ -11,13 +11,15 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yunsoo.adapter.ProductInPackageAdapter;
-import com.yunsoo.fileOpreation.FileOperation;
 import com.yunsoo.fileOpreation.PackDetailFileRead;
 import com.yunsoo.sqlite.MyDataBaseHelper;
+import com.yunsoo.util.Constants;
 import com.yunsoo.util.StringUtils;
 import com.yunsoo.view.TitleBar;
 
@@ -27,7 +29,7 @@ import java.util.List;
 
 public class FixPackActivity extends Activity {
     private TitleBar titleBar;
-    private EditText et_fix_barcode;
+    private TextView tv_fix_barcode;
     private List<String> productCodes;
     private List<String> originalCodes;
     private ProductInPackageAdapter adapter;
@@ -35,6 +37,10 @@ public class FixPackActivity extends Activity {
     private EditText et_get_packCode;
     private EditText et_get_productCode;
     private AlertDialog.Builder builder;
+
+    private TextView tv_fix_tip;
+
+    private LinearLayout ll_fix_top;
     private int originalSize;
     PackDetailFileRead fileRead;
     private File fixedFile;
@@ -42,6 +48,7 @@ public class FixPackActivity extends Activity {
     private String correctString;
 
     private MyDataBaseHelper dataBaseHelper;
+    private TextView tv_fix_pack_code;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +56,13 @@ public class FixPackActivity extends Activity {
         setContentView(R.layout.activity_fix_pack);
 //        correctString="";
         getActionBar().hide();
-        dataBaseHelper=new MyDataBaseHelper(this,"yunsoo_pda",null,1);
+        dataBaseHelper=new MyDataBaseHelper(this, Constants.SQ_DATABASE,null,1);
         titleBar=(TitleBar) findViewById(R.id.fix_title_bar);
+        ll_fix_top= (LinearLayout) findViewById(R.id.ll_fix_top);
+        ll_fix_top.setVisibility(View.INVISIBLE);
+
+        tv_fix_tip= (TextView) findViewById(R.id.tv_fix_tip);
+
         titleBar.setMode(TitleBar.TitleBarMode.BOTH_BUTTONS);
         titleBar.setDisplayAsBack(true);
         titleBar.setTitle("修改包装");
@@ -94,7 +106,7 @@ public class FixPackActivity extends Activity {
         adapter.setProductIdList(productCodes);
         lv_fix_products= (ListView) findViewById(R.id.lv_fix_products);
         lv_fix_products.setAdapter(adapter);
-        et_fix_barcode= (EditText) findViewById(R.id.et_fix_barcode);
+        tv_fix_pack_code= (TextView) findViewById(R.id.tv_right_pack_barcode);
         et_get_packCode= (EditText) findViewById(R.id.et_get_packCode);
         et_get_productCode= (EditText) findViewById(R.id.et_get_productCode);
         et_get_packCode.requestFocus();
@@ -102,7 +114,6 @@ public class FixPackActivity extends Activity {
         bindProductBarcodeChanged();
         bindListViewEvent();
     }
-
 
 
     private void bindListViewEvent(){
@@ -179,11 +190,14 @@ public class FixPackActivity extends Activity {
             public void afterTextChanged(Editable s) {
                 String string = new StringBuilder(s).toString();
                 string=StringUtils.getLastString(StringUtils.replaceBlank(string));
-                et_fix_barcode.setText(string);
+
                 productCodes.clear();
-//                adapter.notifyDataSetChanged();
                 Cursor cursor=dataBaseHelper.getReadableDatabase().rawQuery("select * from pack where pack_key=?", new String[]{string});
-                if(cursor.getCount()>0){
+                if(cursor!=null&&cursor.getCount()>0){
+                    tv_fix_pack_code.setText(string);
+                    ll_fix_top.setVisibility(View.VISIBLE);
+                    tv_fix_tip.setVisibility(View.INVISIBLE);
+
                     et_get_packCode.clearFocus();
                     et_get_productCode.requestFocus();
                     while (cursor.moveToNext()){
@@ -201,57 +215,11 @@ public class FixPackActivity extends Activity {
                 } else {
                     Toast toast = Toast.makeText(getApplicationContext(),
                             "找不到该包装码", Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.CENTER , 0, 0);
+                    toast.setGravity(Gravity.CENTER , 0, 100);
                     toast.show();
                 }
-
-
-
-//                try {
-////                    fileRead=new PackDetailFileRead("Pack_");
-////                    correctString=fileRead.getFixedLineString();
-////
-////                    productCodes.addAll(fileRead.getProductsByPackCode(string));
-//
-//                    originalCodes.addAll(productCodes);
-//                    originalSize=productCodes.size();
-////                    for(int i=0;i<originalSize;i++){
-////                        correctString.replace(","+originalCodes.get(i),"");
-////                    }
-//
-//                    adapter.notifyDataSetChanged();
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    Toast toast = Toast.makeText(getApplicationContext(),
-//                            "找不到该包装码", Toast.LENGTH_SHORT);
-//                    toast.setGravity(Gravity.CENTER , 0, 0);
-//                    toast.show();
-//                }
             }
         });
     }
 
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_fix_pack, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
 }

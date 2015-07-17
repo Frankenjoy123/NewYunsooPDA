@@ -1,6 +1,7 @@
 package com.yunsoo.service;
 
 import android.os.Environment;
+import android.util.Log;
 
 import com.yunsoo.entity.AuthUser;
 import com.yunsoo.exception.LocalGeneralException;
@@ -24,6 +25,7 @@ public class FileUpLoadService extends DataServiceImpl {
 
     private static final String UPLOAD_URL = "/package/file";
     private String filePath;
+    private int index;
 
 
     public FileUpLoadService(String filePath)
@@ -31,10 +33,23 @@ public class FileUpLoadService extends DataServiceImpl {
         this.filePath = filePath;
     }
 
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
     @Override
     protected JSONObject method() throws ServerAuthException, ServerGeneralException, LocalGeneralException,
             NetworkNotAvailableException, Exception {
-        RequestManager.PostByFile(UPLOAD_URL,filePath);
-        return null;
+        Log.d("ZXW","FileUpLoadService start");
+        return RequestManager.PostByFile(UPLOAD_URL,filePath);
+
     }
 }

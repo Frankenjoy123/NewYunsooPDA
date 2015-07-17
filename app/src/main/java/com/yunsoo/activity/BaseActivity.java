@@ -7,7 +7,10 @@ import android.view.View;
 import com.yunsoo.annotation.ViewById;
 import com.yunsoo.dialog.LoadingDialog;
 import com.yunsoo.exception.BaseException;
+import com.yunsoo.exception.ServerAuthException;
+import com.yunsoo.manager.SessionManager;
 import com.yunsoo.service.DataServiceImpl;
+import com.yunsoo.service.PermanentTokenLoginService;
 
 import org.json.JSONObject;
 
@@ -100,6 +103,12 @@ public abstract class BaseActivity extends Activity implements DataServiceImpl.D
 
     @Override
     public void onRequestFailed(DataServiceImpl service, final BaseException exception) {
+        if (exception instanceof ServerAuthException){
+            PermanentTokenLoginService service1=new PermanentTokenLoginService(SessionManager.getInstance().
+                    getAuthUser().getPermanent_token());
+            service1.start();
+        }
+
 //        runOnUiThread(new Runnable() {
 //            @Override
 //            public void run() {

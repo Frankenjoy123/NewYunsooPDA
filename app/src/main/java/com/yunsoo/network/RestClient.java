@@ -142,10 +142,18 @@ public class RestClient {
                         String sFilePath = params.get(0).getValue();
                         // httpPost.setEntity(new FileEntity(new File(sFilePath), "binary/octet-stream"));
 //                        httpPost.setEntity(new FileEntity(new File(sFilePath), "text/plain; charset=\"UTF-8\""));
-                        MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
                         File file = new File(sFilePath);
-                        entity.addPart(new FormBodyPart("file", new FileBody(file, file.getName(), "text/plain", "UTF-8")));
+                        MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+                        FileBody fileBody = new FileBody(file);
+                        entity.addPart("file", fileBody);
+                        httpPost.setEntity(entity);
+                        httpPost.setHeader(entity.getContentType());
 
+
+//                        MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+//                        File file = new File(sFilePath);
+//                        entity.addPart(new FormBodyPart("file", new FileBody(file, file.getName(), "text/plain", "UTF-8")));
+//                        httpPost.setHeader(entity.getContentType());
 
                         httpPost.setEntity(entity);
 
@@ -286,7 +294,7 @@ public class RestClient {
 //                        if (path != null && path.contains(RegisterService.REGISTER_URL)) {
 //                            throw new ServerAuthException("登录失败，请重新登录", false);
 //                        } else {
-//                            throw new ServerAuthException(reason, true);
+                            throw new ServerAuthException(reason, true);
 //                        }
 
                     case HttpStatus.SC_FORBIDDEN:

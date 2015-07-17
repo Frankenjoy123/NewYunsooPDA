@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,16 +13,25 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.yunsoo.activity.R;
 import com.yunsoo.adapter.FileSyncAdapter;
+import com.yunsoo.exception.BaseException;
+import com.yunsoo.exception.ServerAuthException;
 import com.yunsoo.fileOpreation.FileOperation;
 import com.yunsoo.manager.DeviceManager;
 import com.yunsoo.manager.FileManager;
+import com.yunsoo.manager.SQLiteDataBaseManager;
+import com.yunsoo.manager.SessionManager;
+import com.yunsoo.service.DataServiceImpl;
 import com.yunsoo.service.FileUpLoadService;
+import com.yunsoo.service.PermanentTokenLoginService;
 import com.yunsoo.sqlite.MyDataBaseHelper;
 import com.yunsoo.util.Constants;
 import com.yunsoo.view.TitleBar;
+
+import org.json.JSONObject;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -31,17 +41,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class PackSyncActivity extends BaseActivity {
+public class PackSyncActivity extends BaseActivity implements DataServiceImpl.DataServiceDelegate{
     private MyDataBaseHelper dataBaseHelper;
     private ListView lv_pack_sync;
     private TitleBar titleBar;
-
+    private TextView tv_empty_file_tip;
     private FileSyncAdapter adapter;
 
-    private int minIndex;
+//    private int minIndex;
     private int maxIndex;
 
     private List<String> fileNames;
+    private List<Integer> status;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,49 +62,17 @@ public class PackSyncActivity extends BaseActivity {
         getActionBar().hide();
 
         init();
+
         createPackFile();
+
         getPackFileNames();
-        uploadFiles();
-    }
-
-    private void uploadFiles() {
-        String folderName = android.os.Environment.getExternalStorageDirectory() +
-                Constants.YUNSOO_FOLDERNAME+Constants.PACK_SYNC_TASK_FOLDER;
-        File pack_task_folder = new File(folderName);
-        File[] files=pack_task_folder.listFiles();
-        for(File file:files){
-            FileUpLoadService service=new FileUpLoadService(file.getAbsolutePath());
-            service.start();
-
-        }
-//        for (int i=0;i<files.length;i++){
-//            String path=files[i].getAbsolutePath();
-//            FileUpLoadService service=new FileUpLoadService(path);
-//            service.start();
-//        }
 
     }
 
-    private void getPackFileNames() {
-        try {
-            String folderName = android.os.Environment.getExternalStorageDirectory() +
-                    Constants.YUNSOO_FOLDERNAME+Constants.PACK_SYNC_TASK_FOLDER;
-            File pack_task_folder = new File(folderName);
-            String[] packFiles= pack_task_folder.list();
-            if (packFiles!=null&&packFiles.length>0){
-                for (int i=0;i<packFiles.length;i++){
-                    fileNames.add(packFiles[i]);
-                }
-                adapter.notifyDataSetChanged();
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     private void init() {
         lv_pack_sync= (ListView) findViewById(R.id.lv_pack_sync);
+        tv_empty_file_tip= (TextView) findViewById(R.id.tv_empty_file_tip);
         titleBar= (TitleBar) findViewById(R.id.pack_sync_title_bar);
         titleBar.setTitle(getString(R.string.pack_sync));
         titleBar.setMode(TitleBar.TitleBarMode.BOTH_BUTTONS);
@@ -100,8 +80,12 @@ public class PackSyncActivity extends BaseActivity {
         titleBar.setRightButtonText(getString(R.string.sync));
         adapter=new FileSyncAdapter(this);
         fileNames=new ArrayList<>();
+        status=new ArrayList<>();
         adapter.setFileNames(fileNames);
+        adapter.setStatus(status);
+
         lv_pack_sync.setAdapter(adapter);
+
 
         titleBar.setOnRightButtonClickedListener(new View.OnClickListener() {
             @Override
@@ -117,6 +101,9 @@ public class PackSyncActivity extends BaseActivity {
                                         Intent intent=new Intent(PackSyncActivity.this,OffLineUploadActivity.class);
                                         startActivity(intent);
                                     }
+                                    else if(i==1){
+                                        uploadFiles();
+                                    }
                                 }
                             })
                             .setCancelable(false)
@@ -127,19 +114,114 @@ public class PackSyncActivity extends BaseActivity {
         });
     }
 
+    private void uploadFiles() {
+        showLoading();
+        String folderName = android.os.Environment.getExternalStorageDirectory() +
+                Constants.YUNSOO_FOLDERNAME+Constants.PACK_SYNC_TASK_FOLDER;
+        File pack_task_folder = new File(folderName);
+        File[] files=pack_task_folder.listFiles();
+        for(int i=0;i<files.length;i++){
+            status.set(i,1);
+            FileUpLoadService service=new FileUpLoadService(files[i].getAbsolutePath());
+            service.setIndex(i);
+            service.setDelegate(this);
+            service.start();
+        }
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onRequestSucceeded(final DataServiceImpl service, JSONObject data, boolean isCached) {
+        super.onRequestSucceeded(service, data, isCached);
+        if (service instanceof FileUpLoadService){
+            String folderName = android.os.Environment.getExternalStorageDirectory() +
+                    Constants.YUNSOO_FOLDERNAME+Constants.PACK_SYNC_SUCCESS_FOLDER;
+            File pack_success_folder = new File(folderName);
+            if (!pack_success_folder.exists()){
+                pack_success_folder.mkdirs();
+            }
+            File oldFile=new File(((FileUpLoadService) service).getFilePath());
+            File newFile=new File(pack_success_folder,oldFile.getName());
+            oldFile.renameTo(newFile);
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                    int index=((FileUpLoadService) service).getIndex();
+                    status.set(index,2);
+                    adapter.notifyDataSetChanged();
+                    if (index==status.size()-1){
+                        hideLoading();
+                    }
+                }
+            });
+        }
+
+        if (service instanceof PermanentTokenLoginService){
+            String folderName = android.os.Environment.getExternalStorageDirectory() +
+                    Constants.YUNSOO_FOLDERNAME+Constants.PACK_SYNC_TASK_FOLDER;
+            File pack_task_folder = new File(folderName);
+            File[] files=pack_task_folder.listFiles();
+            for(int i=0;i<files.length;i++){
+                status.set(i,1);
+                FileUpLoadService fileUpLoadService=new FileUpLoadService(files[i].getAbsolutePath());
+                fileUpLoadService.setIndex(i);
+                fileUpLoadService.setDelegate(this);
+                fileUpLoadService.start();
+            }
+        }
+    }
+
+    @Override
+    public void onRequestFailed(DataServiceImpl service, BaseException exception) {
+//        super.onRequestFailed(service, exception);
+        if (exception instanceof ServerAuthException){
+            PermanentTokenLoginService service1=new PermanentTokenLoginService(SessionManager.getInstance().
+                    getAuthUser().getPermanent_token());
+            service1.setDelegate(this);
+            service1.start();
+        }
+    }
+
+    private void getPackFileNames() {
+        try {
+            String folderName = android.os.Environment.getExternalStorageDirectory() +
+                    Constants.YUNSOO_FOLDERNAME+Constants.PACK_SYNC_TASK_FOLDER;
+            File pack_task_folder = new File(folderName);
+            String[] packFiles= pack_task_folder.list();
+            if (packFiles!=null&&packFiles.length>0){
+                for (int i=0;i<packFiles.length;i++){
+                    fileNames.add(packFiles[i]);
+                    status.add(0);
+                }
+                lv_pack_sync.setEmptyView(tv_empty_file_tip);
+                adapter.notifyDataSetChanged();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void createPackFile() {
         dataBaseHelper=new MyDataBaseHelper(this, Constants.SQ_DATABASE,null,1);
-        Cursor cursor=dataBaseHelper.getReadableDatabase().rawQuery("select * from pack where status='0'",null);
+        Cursor cursor= null;
+        try {
+            cursor = dataBaseHelper.getReadableDatabase().rawQuery("select * from pack where _id>?",
+                    new String[]{String.valueOf(SQLiteDataBaseManager.getInstance().getLastId())});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        if (cursor.getCount()>0){
+        if (cursor!=null&&cursor.getCount()>0){
 
             StringBuilder builder=new StringBuilder();
 
             while (cursor.moveToNext()){
-                if (cursor.isFirst()){
-                    minIndex=cursor.getInt(0);
-                }else if (cursor.isLast()){
+                if (cursor.isLast()){
                     maxIndex=cursor.getInt(0);
+                    SQLiteDataBaseManager.getInstance().saveLastId(maxIndex);
                 }
                 builder.append(cursor.getString(3));
                 builder.append(",");
@@ -148,8 +230,13 @@ public class PackSyncActivity extends BaseActivity {
                 builder.append(cursor.getString(2));
                 builder.append("\r\n");
             }
-            dataBaseHelper.getWritableDatabase().execSQL("update pack set status='1' where _id>=? and _id<=?",
-                    new String[]{String.valueOf(minIndex),String.valueOf(maxIndex)});
+//            try {
+//                dataBaseHelper.getWritableDatabase().execSQL("update pack set status='1' where _id>=? and _id<=?",
+//                        new String[]{String.valueOf(minIndex),String.valueOf(maxIndex)});
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+            dataBaseHelper.close();
 
             try {
 
@@ -159,10 +246,11 @@ public class PackSyncActivity extends BaseActivity {
                 if (!pack_task_folder.exists())
                     pack_task_folder.mkdirs();
 
-                StringBuilder fileNameBuilder=new StringBuilder("pack_");
+                StringBuilder fileNameBuilder=new StringBuilder("Pack_");
                 fileNameBuilder.append(DeviceManager.getInstance().getDeviceId());
                 fileNameBuilder.append("_");
                 fileNameBuilder.append(FileManager.getInstance().getPackFileLastIndex() + 1);
+                fileNameBuilder.append(".txt");
 
                 File file=new File(pack_task_folder,fileNameBuilder.toString());
 
@@ -180,27 +268,5 @@ public class PackSyncActivity extends BaseActivity {
         }
 
     }
-
-
-//    private boolean getFileBySQLite() {
-//        try {
-//            File file = new File(FileOperation.createNewFileName("/Pack_"));
-//            BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
-//
-//            String str = formatter.format(curDate);
-//            content = str + "," + content;
-//            content += "\r\n";
-////
-//            bw.write(content);
-//            bw.flush();
-//            return true;
-//        } catch (Exception ex) {
-////            logger.e(ex);
-//            Log.d("ZXW", "MainActivity writeFile");
-//            return false;
-//        }
-//    }
-
-
 
 }

@@ -36,7 +36,7 @@ public class LoginService extends DataServiceImpl {
         user.populate(result);
         SessionManager.getInstance().saveLoginCredential(user);
 
-        JSONObject userInfoJsonObject = RequestManager.Get("/user/" + user.getUserId(), null);
+//        JSONObject userInfoJsonObject = RequestManager.Get("/user/" + user.getUserId(), null);
 //        UserInfo userInfo = new UserInfo();
 //        userInfo.populate(userInfoJsonObject);
 //        user.setUserInfo(userInfo);

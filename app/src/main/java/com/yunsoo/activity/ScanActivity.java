@@ -28,6 +28,7 @@ import com.yunsoo.fileOpreation.FileOperation;
 import com.yunsoo.sqlite.MyDataBaseHelper;
 import com.yunsoo.sqlite.SQLiteOperation;
 import com.yunsoo.unity.ListItem;
+import com.yunsoo.util.Constants;
 import com.yunsoo.view.TitleBar;
 
 import java.io.BufferedWriter;
@@ -94,7 +95,7 @@ public class ScanActivity extends Activity {
 	}
 
     private void init() {
-        dataBaseHelper=new MyDataBaseHelper(this,"yunsoo_pda",null,1);
+        dataBaseHelper=new MyDataBaseHelper(this, Constants.SQ_DATABASE,null,1);
 
         //	private int[] standards=new int[]{5,10,20,30,50};
         standards.add(5);
@@ -325,7 +326,6 @@ public class ScanActivity extends Activity {
                                         "该码已存在", Toast.LENGTH_SHORT);
                                 toast.setGravity(Gravity.BOTTOM , 0, 0);
                                 toast.show();
-                                //isValideScan=false;
                                 return;
                             }
                         }
@@ -397,28 +397,35 @@ public class ScanActivity extends Activity {
 				}
 //				saveContent=saveContent.substring(0, saveContent.lastIndexOf(','));
 
-                SQLiteOperation.insertPackData(dataBaseHelper.getWritableDatabase(),pack_key,builder.toString(),"20150714");
-//				Boolean result=writeFile(saveContent);
-//				Log.d("ZXW", "scanPackageKey result "+result.toString());
-//		        if (result) {
+                try {
+                    SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                    Date date=new Date();
+                    SQLiteOperation.insertPackData(dataBaseHelper.getWritableDatabase(),pack_key,builder.toString(),dateFormat.format(date));
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            "打包完成", Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER , 0, 0);
+                    toast.show();
+                    finishedBags++;
+                    finish_package_text.setText("今日已打包： "+finishedBags+"箱");
 
-		            Toast toast = Toast.makeText(getApplicationContext(),
-		                    "打包完成", Toast.LENGTH_LONG);
-		            toast.setGravity(Gravity.CENTER , 0, 0);
-		            toast.show();
-		            finishedBags++;
-		            finish_package_text.setText("今日已打包： "+finishedBags+"箱");
-		            
-		            listItems.clear();
-		            count=0;
-		            progressBar.setProgress(count);
-		            progressText.setText("当前进度:"+count+"/"+standard);
+                    listItems.clear();
+                    count=0;
+                    progressBar.setProgress(count);
+                    progressText.setText("当前进度:"+count+"/"+standard);
 
-		            editText.requestFocus();
-		            package_key_EditText.clearFocus();
+                    editText.requestFocus();
+                    package_key_EditText.clearFocus();
                     tv_note_scan_pack.setVisibility(View.INVISIBLE);
+                } catch (android.database.sqlite.SQLiteConstraintException e) {
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            getString(R.string.check_pack_repeat), Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER , 0, 0);
+                    toast.show();
 
-//		        }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
 			}
 		});
 

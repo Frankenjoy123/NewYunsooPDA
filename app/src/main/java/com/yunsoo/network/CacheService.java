@@ -62,7 +62,7 @@ public class CacheService {
 				}
 				//TODO after login, then try to reset data folders.
 				// put it here just for demo purpose.
-				m_cacheService.resetDataDir(context);
+//				m_cacheService.resetDataDir(context);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -70,20 +70,20 @@ public class CacheService {
 		}
 	}
 
-	public void resetDataDir(Context context) {
-		String sdState = android.os.Environment.getExternalStorageState();
-		if (sdState.equals(android.os.Environment.MEDIA_MOUNTED)) {
-			File sdDir = android.os.Environment.getExternalStorageDirectory();
-			m_cacheService.dataDir = new File(sdDir, packageName + Constants.Cache.CACHE_SDCARD_DATA_PATH
-					+ SessionManager.getInstance().getId());
-
-		} else {
-			m_cacheService.dataDir = context.getCacheDir();
-		}
-		if (!m_cacheService.dataDir.exists()) {
-			m_cacheService.dataDir.mkdirs();
-		}
-	}
+//	public void resetDataDir(Context context) {
+//		String sdState = android.os.Environment.getExternalStorageState();
+//		if (sdState.equals(android.os.Environment.MEDIA_MOUNTED)) {
+//			File sdDir = android.os.Environment.getExternalStorageDirectory();
+//			m_cacheService.dataDir = new File(sdDir, packageName + Constants.Cache.CACHE_SDCARD_DATA_PATH
+//					+ SessionManager.getInstance().getId());
+//
+//		} else {
+//			m_cacheService.dataDir = context.getCacheDir();
+//		}
+//		if (!m_cacheService.dataDir.exists()) {
+//			m_cacheService.dataDir.mkdirs();
+//		}
+//	}
 
 //	public long getAllCacheSize() {
 //		File imageDir = ImageManager.getInstance().getCacheDir();

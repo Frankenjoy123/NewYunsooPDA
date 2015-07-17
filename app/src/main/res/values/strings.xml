@@ -11,25 +11,18 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
-    <string name="tab_message">消息</string>
-    <string name="tab_history">历史记录</string>
+
     <string name="tab_scan">扫一扫</string>
     <string name="tab_find">发现</string>
     <string name="tab_profile">我</string>
     <string name="back">返回</string>
-    <string name="scan_text">将二维码放入框内, 即可自动扫描</string>
-    <string name="scan_failed">扫描失败，请重试。</string>
-    <string name="original_info">原始信息</string>
-    <string name="detail_info">详细信息</string>
-    <string name="scan_result">扫描结果</string>
+
     <string name="network_not_available">请检查网络连接</string>
     <string name="pull_to_refresh_pull_label">下拉刷新...</string>
     <string name="pull_to_refresh_release_label">松开刷新...</string>
     <string name="pull_to_refresh_refreshing_label">加载中...</string>
     <string name="pull_to_refresh_tap_label">点击加载...</string>
-    <string name="hint_search">搜索</string>
-    <string name="find_tag">标签</string>
-    <string name="company_member">企业会员</string>
+
     <string name="activity">活动</string>
     <string name="popular">热门</string>
     <string name="nearby">周边</string>
@@ -43,29 +36,11 @@
     <string name="copy">复制</string>
     <string name="copy_succeeded">复制成功</string>
     <string name="rfid_tip">请将手机靠近标签</string>
-    <string name="rfid_enable">请开启NFC功能</string>
-    <string name="demo_scan_result">此商品为真品</string>
-    <string name="demo_scan_desc">还有0天过期</string>
-    <string name="nfc_not_supported">本手机不支持NFC</string>
-    <string name="nfc_enable_title">开启NFC功能</string>
-    <string name="nfc_enable_message">是否开启NFC功能？</string>
+
     <string name="yes">是</string>
     <string name="no">否</string>
 
     <string name="key_exist">改码已存在</string>
-
-    <!-- Locaiton -->
-    <string name="enable_location_title">开启位置服务</string>
-    <string name="enable_location_message">为了更好地验证物品的真假，串货等，请务必开启位置服务。</string>
-    <string name="location_ok">好的</string>
-    <string name="location_no">暂时不</string>
-    <string name="loading">加载中...</string>
-
-    <!-- scan result UI -->
-
-    <string name="product_detail_basic">基本信息</string>
-    <string name="product_scan_info">扫描信息</string>
-    <string name="product_tracking">物流跟踪</string>
 
     <string name="product_name">物品名称</string>
     <string name="product_desc">商品描述</string>
@@ -84,8 +59,9 @@
     <string name="yunsoo_path">云溯物流</string>
 
     <string name="off_line_upload">离线上传</string>
-    <string name="wifi_upload">WIFI上传</string>
-
+    <string name="wifi_upload">WIFI上传(推荐)</string>
+    
+    <string name="check_pack_repeat">该包装码已被扫描，请检查是否重复</string>
 
     <string name="settings">设置</string>
     <string name="login">登录</string>
@@ -104,9 +80,10 @@
     <string name="pack_count" >计数：</string>
     <string name="count_unit" >箱</string>
     <string name="pack_barcode">包装码</string>
+    <string name="pack">包装</string>
     <string name="product_barcode">产品码</string>
     <string name="title_activity_fix_pack">FixPackActivity</string>
-    <string name="fix_tip">小提示：扫描包装码获取包内产品</string>
+    <string name="fix_tip">请扫描需要修改的包装</string>
     <string name="device_no_authorize"> 设备未授权,请扫描授权码</string>
     <string name="scan_authorize">扫码授权</string>
     <string name="scan_success">授权成功</string>
@@ -125,7 +102,9 @@
 
     <string name="off_line_help">离线上传温馨提示：</string>
     <string name="off_line_step_1">1.使用USB线连接PDA设备和电脑</string>
-    <string name="off_line_step_2">2.将SD卡/yunsoo/pack/sync_task的文件拷贝至电脑</string>
-    <string name="off_line_step_3">3.将SD卡/yunsoo/pack/sync_task中的文件移至/yunsoo/pack/sync_success中</string>
+    <string name="off_line_step_2">2.将SD卡/yunsu/pack/sync_task的文件拷贝至电脑</string>
+    <string name="off_line_step_3">3.将SD卡/yunsu/pack/sync_task中的文件移至/yunsoo/pack/sync_success中</string>
+
+    <string name="has_no_pack_sync">没有包装需要同步哦，先去打包吧</string>
 
 </resources>

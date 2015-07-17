@@ -9,13 +9,11 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Created by Frank Zhou on 2015/7/14.
  */
 public class MyDataBaseHelper extends SQLiteOpenHelper{
-    /**
-     * status: false 未导出成文件，true 已导出成文件
-     */
+
     final String CREATE_PACK_TABLE_SQL =
-            "create table pack(_id integer primary key autoincrement , pack_key unique, product_keys,last_save_time,status boolean default false)";
+            "create table pack(_id integer primary key autoincrement , pack_key unique, product_keys,last_save_time)";
     final String CREATE_PATH_TABLE_SQL =
-            "create table path(_id integer primary key autoincrement , pack_key unique, action_id,last_save_time)";
+            "create table path(_id integer primary key autoincrement , pack_key unique, action_id integer,last_save_time)";
     public MyDataBaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }

@@ -19,17 +19,16 @@
         android:orientation="horizontal">
         
         <TextView
-            android:layout_width="0dp"
-            android:layout_weight="0.3"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:text="包装码"/>
+            android:text="@string/pack"/>
         <TextView 
             android:id="@+id/tv_packageID"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.7"
-            android:textSize="15sp"
+            android:layout_marginLeft="5dp"
+            android:textSize="20sp"
             
             />
         

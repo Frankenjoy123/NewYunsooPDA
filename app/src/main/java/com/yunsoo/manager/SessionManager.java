@@ -167,15 +167,15 @@ public class SessionManager extends BaseManager {
      * (mTopActivityListener != null && mTopActivityListener.get() != null)
      * mTopActivityListener.get().onLoginComplete(false); } }
      */
-    public String getId() {
-        AuthUser user = getAuthUser();
-//		if (!user.isAuthorized()) {
-//			return DeviceManager.getInstance().getDeviceId();
-//		} else {
-//			return String.valueOf(user.getId());
-//		}
-        return user.getUserId();
-    }
+//    public String getId() {
+//        AuthUser user = getAuthUser();
+////		if (!user.isAuthorized()) {
+////			return DeviceManager.getInstance().getDeviceId();
+////		} else {
+////			return String.valueOf(user.getId());
+////		}
+//        return user.getUserId();
+//    }
 
 
 //    public void anonymousLogin(DataServiceImpl.DataServiceDelegate delegate) {
@@ -186,15 +186,15 @@ public class SessionManager extends BaseManager {
 //    }
 
 
-    public void renewAccountCredential() {
-        AuthUser user = getAuthUser();
-        if (user.isAuthorized()) {
-            LoginService service = new LoginService(user.getPhone(), DeviceManager.getInstance().getDeviceId());
-            service.start();
-        }
-//        else {
-//            RegisterService service = new RegisterService(DeviceManager.getInstance().getDeviceId());
+//    public void renewAccountCredential() {
+//        AuthUser user = getAuthUser();
+//        if (user.isAuthorized()) {
+//            LoginService service = new LoginService(user.getPhone(), DeviceManager.getInstance().getDeviceId());
 //            service.start();
 //        }
-    }
+////        else {
+////            RegisterService service = new RegisterService(DeviceManager.getInstance().getDeviceId());
+////            service.start();
+////        }
+//    }
 }

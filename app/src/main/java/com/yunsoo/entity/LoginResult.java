@@ -9,8 +9,14 @@ import org.json.JSONObject;
 public class LoginResult implements JSONEntity{
     private String accessToken;
 
+    private String permanentToken;
+
     public String getAccessToken() {
         return accessToken;
+    }
+
+    public String getPermanentToken() {
+        return permanentToken;
     }
 
     @Override
@@ -22,6 +28,9 @@ public class LoginResult implements JSONEntity{
     public void populate(JSONObject object)  {
         JSONObject object1=object.optJSONObject("access_token");
         accessToken=object1.optString("token");
+
+        JSONObject object2=object.optJSONObject("permanent_token");
+        permanentToken=object2.optString("token");
     }
 
 }

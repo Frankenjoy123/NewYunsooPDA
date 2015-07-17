@@ -15,6 +15,8 @@ import com.yunsoo.annotation.ViewById;
 //import com.itxiaowu.manager.DeviceGeoLocationManager;
 import com.yunsoo.manager.DeviceManager;
 import com.yunsoo.manager.FileManager;
+import com.yunsoo.manager.LogisticManager;
+import com.yunsoo.manager.SQLiteDataBaseManager;
 import com.yunsoo.manager.SessionManager;
 import com.yunsoo.network.CacheService;
 import com.yunsoo.network.NetworkManager;
@@ -48,10 +50,12 @@ public class WelcomeActivity extends BaseActivity{
 
         FileManager.initializeIntance(this);
 
+        SQLiteDataBaseManager.initializeIntance(this);
 
-    /*    if (!SessionManager.getInstance().getAuthUser().isAuthorized()) {
-            SessionManager.getInstance().anonymousRegister(this);
-        }*/
+        LogisticManager logisticManager=LogisticManager.initializeInstance(this);
+        logisticManager.restore();
+
+
         new Handler().postDelayed(new Runnable() {
 
             @Override

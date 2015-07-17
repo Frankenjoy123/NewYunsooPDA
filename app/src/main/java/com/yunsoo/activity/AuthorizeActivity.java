@@ -27,6 +27,7 @@ import com.yunsoo.network.RestClient;
 import com.yunsoo.service.AuthLoginService;
 import com.yunsoo.service.AuthorizeService;
 import com.yunsoo.service.DataServiceImpl;
+import com.yunsoo.service.LogisticActionService;
 import com.yunsoo.util.ToastMessageHelper;
 
 import org.json.JSONException;
@@ -65,9 +66,9 @@ public class AuthorizeActivity extends BaseActivity implements DataServiceImpl.D
                     //start AuthLoginService
                     JSONObject object=new JSONObject(content);
                     String token=object.optString("t");
-                    AuthUser user = new AuthUser();
-                    user.setToken(token);
-                    SessionManager.getInstance().saveLoginCredential(user);
+//                    AuthUser user = new AuthUser();
+//                    user.setToken(token);
+//                    SessionManager.getInstance().saveLoginCredential(user);
 
                     AuthLoginService authLoginService=new AuthLoginService(token);
                     authLoginService.setDelegate(AuthorizeActivity.this);
@@ -91,8 +92,11 @@ public class AuthorizeActivity extends BaseActivity implements DataServiceImpl.D
                     LoginResult loginResult=new LoginResult();
                     loginResult.populate(data);
                     String accessToken=loginResult.getAccessToken();
+                    String permanentToken=loginResult.getPermanentToken();
                     AuthUser user = new AuthUser();
                     user.setToken(accessToken);
+                    user.setPermanent_token(permanentToken);
+
                     SessionManager.getInstance().saveLoginCredential(user);
 
                     try {
@@ -115,6 +119,8 @@ public class AuthorizeActivity extends BaseActivity implements DataServiceImpl.D
                         service.setDelegate(AuthorizeActivity.this);
                         service.start();
 
+                        LogisticActionService actionService=new LogisticActionService();
+                        actionService.start();
 
                     } catch (JSONException e) {
                         e.printStackTrace();

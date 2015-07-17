@@ -16,4 +16,13 @@
         android:layout_below="@+id/pack_sync_title_bar"
         ></ListView>
 
+    <TextView
+        android:id="@+id/tv_empty_file_tip"
+        android:text="@string/has_no_pack_sync"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textSize="20sp"
+        />
+
 </RelativeLayout>

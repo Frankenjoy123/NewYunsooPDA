@@ -7,23 +7,42 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.yunsoo.activity.R;
+import com.yunsoo.adapter.LogisticActionAdapter;
+import com.yunsoo.manager.LogisticManager;
 
 public class PathMainActivity extends BaseActivity implements View.OnClickListener {
+
+    ListView lv_action;
+    private LogisticActionAdapter actionAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_path_main);
+        initAction();
         getActionBar().hide();
         setupActionItems();
     }
 
+    private void initAction() {
+
+        try {
+            lv_action= (ListView) findViewById(R.id.lv_action);
+            actionAdapter=new LogisticActionAdapter(this);
+            actionAdapter.setActions(LogisticManager.getInstance().getActionList());
+            lv_action.setAdapter(actionAdapter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void setupActionItems() {
 
-        buildViewContent(this.findViewById(R.id.rl_path_scan), R.drawable.ic_delivery, R.string.path_scan);
+//        buildViewContent(this.findViewById(R.id.rl_path_scan), R.drawable.ic_delivery, R.string.path_scan);
         buildViewContent(this.findViewById(R.id.rl_path_sync), R.drawable.ic_synchronize, R.string.sync_path);
 //        buildViewContent(this.findViewById(R.id.rl_modify_package), R.drawable.ic_modify_package, R.string.modify_package);
 
@@ -39,11 +58,11 @@ public class PathMainActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.rl_path_scan:
-                Intent intent1=new Intent(PathMainActivity.this,PathActivity.class);
-                startActivity(intent1);
-                break;
+//        switch (v.getId()){
+//            case R.id.rl_path_scan:
+//                Intent intent1=new Intent(PathMainActivity.this,PathActivity.class);
+//                startActivity(intent1);
+//                break;
 //            case R.id.rl_path_sync:
 //                Intent intent2=new Intent(MainActivity.this,PathActivity.class);
 //                startActivity(intent2);
@@ -52,6 +71,6 @@ public class PathMainActivity extends BaseActivity implements View.OnClickListen
 //                Intent intent3=new Intent(MainActivity.this,FixPackActivity.class);
 //                startActivity(intent3);
 //                break;
-        }
+//        }
     }
 }
