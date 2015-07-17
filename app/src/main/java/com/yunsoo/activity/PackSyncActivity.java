@@ -1,28 +1,20 @@
 package com.yunsoo.activity;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.SQLException;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.yunsoo.activity.R;
 import com.yunsoo.adapter.FileSyncAdapter;
 import com.yunsoo.exception.BaseException;
 import com.yunsoo.exception.ServerAuthException;
-import com.yunsoo.fileOpreation.FileOperation;
 import com.yunsoo.manager.DeviceManager;
 import com.yunsoo.manager.FileManager;
-import com.yunsoo.manager.SQLiteDataBaseManager;
+import com.yunsoo.manager.SQLiteManager;
 import com.yunsoo.manager.SessionManager;
 import com.yunsoo.service.DataServiceImpl;
 import com.yunsoo.service.FileUpLoadService;
@@ -36,9 +28,7 @@ import org.json.JSONObject;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class PackSyncActivity extends BaseActivity implements DataServiceImpl.DataServiceDelegate{
@@ -209,7 +199,7 @@ public class PackSyncActivity extends BaseActivity implements DataServiceImpl.Da
         Cursor cursor= null;
         try {
             cursor = dataBaseHelper.getReadableDatabase().rawQuery("select * from pack where _id>?",
-                    new String[]{String.valueOf(SQLiteDataBaseManager.getInstance().getLastId())});
+                    new String[]{String.valueOf(SQLiteManager.getInstance().getLastId())});
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -221,7 +211,7 @@ public class PackSyncActivity extends BaseActivity implements DataServiceImpl.Da
             while (cursor.moveToNext()){
                 if (cursor.isLast()){
                     maxIndex=cursor.getInt(0);
-                    SQLiteDataBaseManager.getInstance().saveLastId(maxIndex);
+                    SQLiteManager.getInstance().saveLastId(maxIndex);
                 }
                 builder.append(cursor.getString(3));
                 builder.append(",");

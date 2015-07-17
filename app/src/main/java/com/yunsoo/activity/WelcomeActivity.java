@@ -8,19 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import org.apache.http.auth.AUTH;
-import org.json.JSONObject;
-
 import com.yunsoo.annotation.ViewById;
 //import com.itxiaowu.manager.DeviceGeoLocationManager;
 import com.yunsoo.manager.DeviceManager;
 import com.yunsoo.manager.FileManager;
 import com.yunsoo.manager.LogisticManager;
-import com.yunsoo.manager.SQLiteDataBaseManager;
+import com.yunsoo.manager.SQLiteManager;
 import com.yunsoo.manager.SessionManager;
 import com.yunsoo.network.CacheService;
 import com.yunsoo.network.NetworkManager;
-import com.yunsoo.service.DataServiceImpl;
 import com.yunsoo.util.DensityUtil;
 
 
@@ -50,7 +46,7 @@ public class WelcomeActivity extends BaseActivity{
 
         FileManager.initializeIntance(this);
 
-        SQLiteDataBaseManager.initializeIntance(this);
+        SQLiteManager.initializeIntance(this);
 
         LogisticManager logisticManager=LogisticManager.initializeInstance(this);
         logisticManager.restore();
