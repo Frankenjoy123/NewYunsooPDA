@@ -31,14 +31,14 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PackSyncActivity extends BaseActivity implements DataServiceImpl.DataServiceDelegate{
+public class PathSyncActivity extends BaseActivity implements DataServiceImpl.DataServiceDelegate {
     private MyDataBaseHelper dataBaseHelper;
-    private ListView lv_pack_sync;
+    private ListView lv_path_sync;
     private TitleBar titleBar;
     private TextView tv_empty_file_tip;
     private FileSyncAdapter adapter;
 
-//    private int minIndex;
+    //    private int minIndex;
     private int maxIndex;
 
     private List<String> fileNames;
@@ -47,13 +47,13 @@ public class PackSyncActivity extends BaseActivity implements DataServiceImpl.Da
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pack_sync);
+        setContentView(R.layout.activity_path_sync);
 
         getActionBar().hide();
 
         init();
 
-        createPackFile();
+        createFile();
 
         getPackFileNames();
 
@@ -61,10 +61,10 @@ public class PackSyncActivity extends BaseActivity implements DataServiceImpl.Da
 
 
     private void init() {
-        lv_pack_sync= (ListView) findViewById(R.id.lv_pack_sync);
-        tv_empty_file_tip= (TextView) findViewById(R.id.tv_empty_file_tip);
-        titleBar= (TitleBar) findViewById(R.id.pack_sync_title_bar);
-        titleBar.setTitle(getString(R.string.pack_sync));
+        lv_path_sync = (ListView) findViewById(R.id.lv_path_sync);
+        tv_empty_file_tip= (TextView) findViewById(R.id.tv_path_empty_tip);
+        titleBar= (TitleBar) findViewById(R.id.path_sync_title_bar);
+        titleBar.setTitle(getString(R.string.path_sync));
         titleBar.setMode(TitleBar.TitleBarMode.BOTH_BUTTONS);
         titleBar.setDisplayAsBack(true);
         titleBar.setRightButtonText(getString(R.string.sync));
@@ -74,7 +74,7 @@ public class PackSyncActivity extends BaseActivity implements DataServiceImpl.Da
         adapter.setFileNames(fileNames);
         adapter.setStatus(status);
 
-        lv_pack_sync.setAdapter(adapter);
+        lv_path_sync.setAdapter(adapter);
 
 
         titleBar.setOnRightButtonClickedListener(new View.OnClickListener() {
@@ -82,13 +82,13 @@ public class PackSyncActivity extends BaseActivity implements DataServiceImpl.Da
             public void onClick(View v) {
                 if (fileNames!=null&&fileNames.size()>0){
                     String[] titleArray = new String[]{getString(R.string.off_line_upload),
-                    getString(R.string.wifi_upload)};
-                    AlertDialog dialog = new AlertDialog.Builder(PackSyncActivity.this)
+                            getString(R.string.wifi_upload)};
+                    AlertDialog dialog = new AlertDialog.Builder(PathSyncActivity.this)
                             .setItems(titleArray, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     if (i==0){
-                                        Intent intent=new Intent(PackSyncActivity.this,OffLineUploadActivity.class);
+                                        Intent intent=new Intent(PathSyncActivity.this,OffLineUploadActivity.class);
                                         startActivity(intent);
                                     }
                                     else if(i==1){
@@ -107,12 +107,13 @@ public class PackSyncActivity extends BaseActivity implements DataServiceImpl.Da
     private void uploadFiles() {
         showLoading();
         String folderName = android.os.Environment.getExternalStorageDirectory() +
-                Constants.YUNSOO_FOLDERNAME+Constants.PACK_SYNC_TASK_FOLDER;
+                Constants.YUNSOO_FOLDERNAME+Constants.PATH_SYNC_TASK_FOLDER;
         File pack_task_folder = new File(folderName);
         File[] files=pack_task_folder.listFiles();
         for(int i=0;i<files.length;i++){
             status.set(i,1);
             FileUpLoadService service=new FileUpLoadService(files[i].getAbsolutePath());
+            service.setFileType(FileUpLoadService.PATH_FILE);
             service.setIndex(i);
             service.setDelegate(this);
             service.start();
@@ -125,13 +126,13 @@ public class PackSyncActivity extends BaseActivity implements DataServiceImpl.Da
         super.onRequestSucceeded(service, data, isCached);
         if (service instanceof FileUpLoadService){
             String folderName = android.os.Environment.getExternalStorageDirectory() +
-                    Constants.YUNSOO_FOLDERNAME+Constants.PACK_SYNC_SUCCESS_FOLDER;
-            File pack_success_folder = new File(folderName);
-            if (!pack_success_folder.exists()){
-                pack_success_folder.mkdirs();
+                    Constants.YUNSOO_FOLDERNAME+Constants.PATH_SYNC_SUCCESS_FOLDER;
+            File path_success_folder = new File(folderName);
+            if (!path_success_folder.exists()){
+                path_success_folder.mkdirs();
             }
             File oldFile=new File(((FileUpLoadService) service).getFilePath());
-            File newFile=new File(pack_success_folder,oldFile.getName());
+            File newFile=new File(path_success_folder,oldFile.getName());
             oldFile.renameTo(newFile);
 
             runOnUiThread(new Runnable() {
@@ -150,13 +151,12 @@ public class PackSyncActivity extends BaseActivity implements DataServiceImpl.Da
 
         if (service instanceof PermanentTokenLoginService){
             String folderName = android.os.Environment.getExternalStorageDirectory() +
-                    Constants.YUNSOO_FOLDERNAME+Constants.PACK_SYNC_TASK_FOLDER;
-            File pack_task_folder = new File(folderName);
-            File[] files=pack_task_folder.listFiles();
+                    Constants.YUNSOO_FOLDERNAME+Constants.PATH_SYNC_TASK_FOLDER;
+            File path_task_folder = new File(folderName);
+            File[] files=path_task_folder.listFiles();
             for(int i=0;i<files.length;i++){
                 status.set(i,1);
                 FileUpLoadService fileUpLoadService=new FileUpLoadService(files[i].getAbsolutePath());
-                fileUpLoadService.setFileType(FileUpLoadService.PACK_FILE);
                 fileUpLoadService.setIndex(i);
                 fileUpLoadService.setDelegate(this);
                 fileUpLoadService.start();
@@ -178,7 +178,7 @@ public class PackSyncActivity extends BaseActivity implements DataServiceImpl.Da
     private void getPackFileNames() {
         try {
             String folderName = android.os.Environment.getExternalStorageDirectory() +
-                    Constants.YUNSOO_FOLDERNAME+Constants.PACK_SYNC_TASK_FOLDER;
+                    Constants.YUNSOO_FOLDERNAME+Constants.PATH_SYNC_TASK_FOLDER;
             File pack_task_folder = new File(folderName);
             String[] packFiles= pack_task_folder.list();
             if (packFiles!=null&&packFiles.length>0){
@@ -186,7 +186,7 @@ public class PackSyncActivity extends BaseActivity implements DataServiceImpl.Da
                     fileNames.add(packFiles[i]);
                     status.add(0);
                 }
-                lv_pack_sync.setEmptyView(tv_empty_file_tip);
+                lv_path_sync.setEmptyView(tv_empty_file_tip);
                 adapter.notifyDataSetChanged();
             }
 
@@ -195,63 +195,68 @@ public class PackSyncActivity extends BaseActivity implements DataServiceImpl.Da
         }
     }
 
-    private void createPackFile() {
+    private void createFile() {
         dataBaseHelper=new MyDataBaseHelper(this, Constants.SQ_DATABASE,null,1);
         Cursor cursor= null;
         try {
-            cursor = dataBaseHelper.getReadableDatabase().rawQuery("select * from pack where _id>?",
-                    new String[]{String.valueOf(SQLiteManager.getInstance().getPackLastId())});
+            cursor = dataBaseHelper.getReadableDatabase().rawQuery("select * from path where _id>?",
+                    new String[]{String.valueOf(SQLiteManager.getInstance().getPathLastId())});
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         if (cursor!=null&&cursor.getCount()>0){
-
-            StringBuilder builder=new StringBuilder();
-
+/**
+ DeviceCode:ffffffff-bb69-7f45-bbb6-c7f60033c587
+ 2,6cekDjJ3TWKAzN-ZW7X9gx,2015-07-14T11:12:16
+ 2,6cekDjJ3TWKAzN-ZW7X9gx,2015-07-14T11:12:16
+ 2,6cekDjJ3TWKAzN-ZW7X9gx,2015-07-14T11:12:16
+ 2,6cekDjJ3TWKAzN-ZW7X9gx,2015-07-14T11:12:16
+ */
+            StringBuilder builder=new StringBuilder("DeviceCode:");
+            builder.append(DeviceManager.getInstance().getDeviceId());
+            builder.append("\r\n");
+/**
+ *     final String CREATE_PATH_TABLE_SQL =
+ "create table path(_id integer primary key autoincrement , pack_key, action_id integer,last_save_time)";
+ */
             while (cursor.moveToNext()){
                 if (cursor.isLast()){
                     maxIndex=cursor.getInt(0);
-                    SQLiteManager.getInstance().savePackLastId(maxIndex);
+                    SQLiteManager.getInstance().savePathLastId(maxIndex);
                 }
-                builder.append(cursor.getString(3));
+                builder.append(cursor.getString(2)); 
                 builder.append(",");
                 builder.append(cursor.getString(1));
                 builder.append(",");
-                builder.append(cursor.getString(2));
+                builder.append(cursor.getString(3));
                 builder.append("\r\n");
             }
-//            try {
-//                dataBaseHelper.getWritableDatabase().execSQL("update pack set status='1' where _id>=? and _id<=?",
-//                        new String[]{String.valueOf(minIndex),String.valueOf(maxIndex)});
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
+            
             dataBaseHelper.close();
 
             try {
 
                 String folderName = android.os.Environment.getExternalStorageDirectory() +
-                        Constants.YUNSOO_FOLDERNAME+Constants.PACK_SYNC_TASK_FOLDER;
-                File pack_task_folder = new File(folderName);
-                if (!pack_task_folder.exists())
-                    pack_task_folder.mkdirs();
+                        Constants.YUNSOO_FOLDERNAME+Constants.PATH_SYNC_TASK_FOLDER;
+                File path_task_folder = new File(folderName);
+                if (!path_task_folder.exists())
+                    path_task_folder.mkdirs();
 
-                StringBuilder fileNameBuilder=new StringBuilder("Pack_");
+                StringBuilder fileNameBuilder=new StringBuilder("Path_");
                 fileNameBuilder.append(DeviceManager.getInstance().getDeviceId());
                 fileNameBuilder.append("_");
-                fileNameBuilder.append(FileManager.getInstance().getPackFileLastIndex() + 1);
+                fileNameBuilder.append(FileManager.getInstance().getPathFileLastIndex() + 1);
                 fileNameBuilder.append(".txt");
 
-                File file=new File(pack_task_folder,fileNameBuilder.toString());
+                File file=new File(path_task_folder,fileNameBuilder.toString());
 
                 BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
 
                 bw.write(builder.toString());
                 bw.flush();
 
-                FileManager.getInstance().savePackFileIndex(FileManager.getInstance().getPackFileLastIndex() + 1);
-
+                FileManager.getInstance().savePathFileIndex(FileManager.getInstance().getPathFileLastIndex() + 1);
 
             } catch (Exception ex) {
                 ex.printStackTrace();

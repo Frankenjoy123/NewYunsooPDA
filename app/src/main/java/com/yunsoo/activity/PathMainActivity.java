@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -14,10 +15,15 @@ import com.yunsoo.activity.R;
 import com.yunsoo.adapter.LogisticActionAdapter;
 import com.yunsoo.manager.LogisticManager;
 
+import java.util.List;
+import java.util.Map;
+
 public class PathMainActivity extends BaseActivity implements View.OnClickListener {
 
     ListView lv_action;
     private LogisticActionAdapter actionAdapter;
+
+    List<Map<Integer,String>> actions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,18 +39,24 @@ public class PathMainActivity extends BaseActivity implements View.OnClickListen
         try {
             lv_action= (ListView) findViewById(R.id.lv_action);
             actionAdapter=new LogisticActionAdapter(this);
-            actionAdapter.setActions(LogisticManager.getInstance().getActionList());
+            actions=LogisticManager.getInstance().getActionList();
+            actionAdapter.setActions(actions);
             lv_action.setAdapter(actionAdapter);
+
+            lv_action.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                }
+            });
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void setupActionItems() {
-
-//        buildViewContent(this.findViewById(R.id.rl_path_scan), R.drawable.ic_delivery, R.string.path_scan);
         buildViewContent(this.findViewById(R.id.rl_path_sync), R.drawable.ic_synchronize, R.string.sync_path);
-//        buildViewContent(this.findViewById(R.id.rl_modify_package), R.drawable.ic_modify_package, R.string.modify_package);
 
     }
 
@@ -58,19 +70,12 @@ public class PathMainActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-//        switch (v.getId()){
-//            case R.id.rl_path_scan:
-//                Intent intent1=new Intent(PathMainActivity.this,PathActivity.class);
-//                startActivity(intent1);
-//                break;
-//            case R.id.rl_path_sync:
-//                Intent intent2=new Intent(MainActivity.this,PathActivity.class);
-//                startActivity(intent2);
-//                break;
-//            case R.id.rl_modify_package:
-//                Intent intent3=new Intent(MainActivity.this,FixPackActivity.class);
-//                startActivity(intent3);
-//                break;
-//        }
+        switch (v.getId()){
+            case R.id.rl_path_sync:
+                Intent intent1=new Intent(PathMainActivity.this,PathSyncActivity.class);
+                startActivity(intent1);
+                break;
+
+        }
     }
 }

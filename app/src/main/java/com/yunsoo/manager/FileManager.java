@@ -46,4 +46,16 @@ public class FileManager extends BaseManager{
                 Context.MODE_PRIVATE);
         return preferences.getInt(Constants.Preference.PACK_FILE_LAST_INDEX, 0);
     }
+
+    public void savePathFileIndex(int index) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(Constants.Preference.PREF_FILE, Context.MODE_PRIVATE).edit();
+        editor.putInt(Constants.Preference.PATH_FILE_LAST_INDEX, index);
+        editor.commit();
+    }
+
+    public int getPathFileLastIndex(){
+        SharedPreferences preferences = context.getSharedPreferences(Constants.Preference.PREF_FILE,
+                Context.MODE_PRIVATE);
+        return preferences.getInt(Constants.Preference.PATH_FILE_LAST_INDEX, 0);
+    }
 }

@@ -31,15 +31,27 @@ public class SQLiteManager extends BaseManager {
         return dataBaseManager;
     }
 
-    public  void saveLastId(int id){
+    public  void savePackLastId(int id){
         SharedPreferences.Editor editor = dataBaseManager.context.getSharedPreferences(Constants.Preference.PREF_SQLITE, Context.MODE_PRIVATE).edit();
-        editor.putInt(Constants.Preference.SQ_LAST_ID, id);
+        editor.putInt(Constants.Preference.SQ_PACK_LAST_ID, id);
         editor.commit();
     }
 
-    public  int getLastId(){
+    public  int getPackLastId(){
         SharedPreferences preferences = dataBaseManager.context.getSharedPreferences(Constants.Preference.PREF_SQLITE,
                 Context.MODE_PRIVATE);
-        return preferences.getInt(Constants.Preference.SQ_LAST_ID, 0);
+        return preferences.getInt(Constants.Preference.SQ_PACK_LAST_ID, 0);
+    }
+
+    public  void savePathLastId(int id){
+        SharedPreferences.Editor editor = dataBaseManager.context.getSharedPreferences(Constants.Preference.PREF_SQLITE, Context.MODE_PRIVATE).edit();
+        editor.putInt(Constants.Preference.SQ_PATH_LAST_ID, id);
+        editor.commit();
+    }
+
+    public  int getPathLastId(){
+        SharedPreferences preferences = dataBaseManager.context.getSharedPreferences(Constants.Preference.PREF_SQLITE,
+                Context.MODE_PRIVATE);
+        return preferences.getInt(Constants.Preference.SQ_PATH_LAST_ID, 0);
     }
 }

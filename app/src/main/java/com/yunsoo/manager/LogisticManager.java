@@ -83,6 +83,7 @@ public class LogisticManager extends BaseManager {
     }
 
     public void restore() {
+        actionList.clear();
 
         SharedPreferences preferences = context.getSharedPreferences(Constants.Preference.PREF_LOGISTIC,
                 Context.MODE_PRIVATE);

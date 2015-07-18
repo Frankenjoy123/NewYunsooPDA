@@ -97,6 +97,8 @@
     <string name="title_activity_path_main">PathMainActivity</string>
     <string name="title_activity_pack_sync">PackSyncActivity</string>
 
+    <string name="path_sync">同步物流</string>
+
     <string name="pack_sync">同步包装</string>
     <string name="title_activity_off_line_upload">OffLineUploadActivity</string>
 
@@ -105,6 +107,11 @@
     <string name="off_line_step_2">2.将SD卡/yunsu/pack/sync_task的文件拷贝至电脑</string>
     <string name="off_line_step_3">3.将SD卡/yunsu/pack/sync_task中的文件移至/yunsoo/pack/sync_success中</string>
 
+    <string name="offline_path_step_2">2.将SD卡/yunsu/path/sync_task的文件拷贝至电脑</string>
+    <string name="offline_path_step_3">3.将SD卡/yunsu/path/sync_task中的文件移至/yunsoo/path/sync_success中</string>
+
     <string name="has_no_pack_sync">没有包装需要同步哦，先去打包吧</string>
+    <string name="has_no_path_sync">没有物流需要同步哦，开始扫描吧</string>
+    <string name="title_activity_path_sync">PathSyncActivity</string>
 
 </resources>

@@ -21,10 +21,12 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.yunsoo.adapter.LogisticActionAdapter;
 import com.yunsoo.adapter.PathAdapter;
 import com.yunsoo.fileOpreation.FileOperation;
 import com.yunsoo.sqlite.MyDataBaseHelper;
 import com.yunsoo.sqlite.SQLiteOperation;
+import com.yunsoo.util.Constants;
 import com.yunsoo.util.StringUtils;
 import com.yunsoo.view.TitleBar;
 
@@ -56,6 +58,9 @@ public class PathActivity extends Activity {
 	private Button btnPathHistory;
 	
 	private MyDataBaseHelper dataBaseHelper;
+
+    private int actionId;
+    private String actionName;
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +71,11 @@ public class PathActivity extends Activity {
 	}
 
     private void init() {
-        dataBaseHelper=new MyDataBaseHelper(this,"yunsoo_pda",null,1);
+
+        actionId=getIntent().getIntExtra(LogisticActionAdapter.ACTION_ID,0);
+        actionName=getIntent().getStringExtra(LogisticActionAdapter.ACTION_NAME);
+
+        dataBaseHelper=new MyDataBaseHelper(this, Constants.SQ_DATABASE,null,1);
         preferences=getSharedPreferences("pathActivityPre", Context.MODE_PRIVATE);
         editor=preferences.edit();
         prevFileName=preferences.getString("prevFileName", "");
@@ -86,7 +95,7 @@ public class PathActivity extends Activity {
         titleBar=(TitleBar) findViewById(R.id.title_bar);
         titleBar.setMode(TitleBar.TitleBarMode.LEFT_BUTTON);
         titleBar.setDisplayAsBack(true);
-        titleBar.setTitle("物流扫描");
+        titleBar.setTitle(actionName+"扫描");
 
         btnSubmit=(Button) findViewById(R.id.btn_submitPath);
         if(keys==null|| keys.size()==0){
@@ -110,6 +119,8 @@ public class PathActivity extends Activity {
             public void onClick(View v) {
 
                 Intent intent=new Intent(PathActivity.this,PathHistoryActivity.class);
+                intent.putExtra(LogisticActionAdapter.ACTION_NAME,actionName);
+                intent.putExtra(LogisticActionAdapter.ACTION_ID,actionId);
                 startActivity(intent);
             }
         });
@@ -128,7 +139,8 @@ public class PathActivity extends Activity {
 	
 	private void bindSubmit() {
 
-		
+        final SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        final Date date=new Date();
 		btnSubmit.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -136,7 +148,7 @@ public class PathActivity extends Activity {
 				if(!keys.isEmpty()){
 //					String saveContent="";
 					for (int i = 0; i < keys.size(); i++) {
-                        SQLiteOperation.insertPathData(dataBaseHelper.getWritableDatabase(),keys.get(i),"InBase","20150715");
+                        SQLiteOperation.insertPathData(dataBaseHelper.getWritableDatabase(),keys.get(i),actionId,dateFormat.format(date));
 //						saveContent+=keys.get(i)+",";
 					}
 //					saveContent=saveContent.substring(0, saveContent.lastIndexOf(','));

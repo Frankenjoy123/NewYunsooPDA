@@ -22,11 +22,18 @@ import java.nio.charset.Charset;
 
 
 public class FileUpLoadService extends DataServiceImpl {
+    public static final String PACK_FILE="pack_file";
+    public static final String PATH_FILE="path_file";
 
-    private static final String UPLOAD_URL = "/package/file";
     private String filePath;
     private int index;
+    private String url;
 
+    private String fileType;
+
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
+    }
 
     public FileUpLoadService(String filePath)
     {
@@ -49,7 +56,12 @@ public class FileUpLoadService extends DataServiceImpl {
     protected JSONObject method() throws ServerAuthException, ServerGeneralException, LocalGeneralException,
             NetworkNotAvailableException, Exception {
         Log.d("ZXW","FileUpLoadService start");
-        return RequestManager.PostByFile(UPLOAD_URL,filePath);
+        if (fileType.equals(FileUpLoadService.PACK_FILE)){
+            url="/package/file";
+        }else if (fileType.equals(FileUpLoadService.PATH_FILE)){
+            url="/logistics/file";
+        }
+        return RequestManager.PostByFile(url,filePath);
 
     }
 }

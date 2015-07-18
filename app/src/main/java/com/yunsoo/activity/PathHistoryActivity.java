@@ -6,10 +6,12 @@ import android.os.Bundle;
 import android.text.format.Time;
 import android.widget.ListView;
 
+import com.yunsoo.adapter.LogisticActionAdapter;
 import com.yunsoo.adapter.PathAdapter;
 import com.yunsoo.fileOpreation.FileRead;
 import com.yunsoo.sqlite.MyDataBaseHelper;
 import com.yunsoo.unity.PackageDetail;
+import com.yunsoo.util.Constants;
 import com.yunsoo.view.TitleBar;
 
 import java.util.ArrayList;
@@ -23,27 +25,31 @@ public class PathHistoryActivity extends Activity {
     private TitleBar titleBar;
 
     private MyDataBaseHelper dataBaseHelper;
+    private String actionName;
+    private int actionId;
 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_path_history);
-        dataBaseHelper=new MyDataBaseHelper(this,"yunsoo_pda",null,1);
+        actionName=getIntent().getStringExtra(LogisticActionAdapter.ACTION_NAME);
+        actionId=getIntent().getIntExtra(LogisticActionAdapter.ACTION_ID,0);
+
+        dataBaseHelper=new MyDataBaseHelper(this, Constants.SQ_DATABASE,null,1);
         getActionBar().hide();
         titleBar=(TitleBar) findViewById(R.id.pathHistory_title_bar);
         titleBar.setMode(TitleBar.TitleBarMode.LEFT_BUTTON);
         titleBar.setDisplayAsBack(true);
-        titleBar.setTitle("物流扫描历史");
-
-
+        titleBar.setTitle(actionName+"扫描历史");
 
         try {
 //            historyFileReader=new FileRead("Path_");
 //            Time time=new Time();
 //            time.setToNow();
 //            historyList=historyFileReader.getKeyList(time);
-            Cursor cursor=dataBaseHelper.getReadableDatabase().rawQuery("select * from path", null);
+            Cursor cursor=dataBaseHelper.getReadableDatabase().rawQuery("select * from path where action_id=?",
+                    new String[]{String.valueOf(actionId)});
             while (cursor.moveToNext()){
                 String pack_key=cursor.getString(1);
                 historyList.add(pack_key);

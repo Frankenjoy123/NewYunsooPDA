@@ -23,9 +23,12 @@ public final class Constants {
 
         public final static String PREF_FILE="file_in";
         public final static String PACK_FILE_LAST_INDEX="pack_file_index";
+        public final static String PATH_FILE_LAST_INDEX="path_file_index";
 
         public final static String PREF_SQLITE="sqLite_in";
-        public final static String SQ_LAST_ID="sqLite_last_id";
+        public final static String SQ_PACK_LAST_ID ="sqLite_pack_last_id";
+
+        public final static String SQ_PATH_LAST_ID ="sqLite_path_last_id";
 
 		// json String
 		public final static String KEY_USER_INFO = "user_info";
@@ -67,5 +70,9 @@ public final class Constants {
     public static final String PACK_SYNC_TASK_FOLDER = "/pack/sync_task";
 
     public static final String PACK_SYNC_SUCCESS_FOLDER="/pack/sync_success";
+
+    public static final String PATH_SYNC_TASK_FOLDER = "/path/sync_task";
+
+    public static final String PATH_SYNC_SUCCESS_FOLDER="/path/sync_success";
 
 }

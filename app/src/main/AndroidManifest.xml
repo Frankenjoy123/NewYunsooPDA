@@ -109,6 +109,10 @@
             android:name=".OffLineUploadActivity"
             android:label="@string/title_activity_off_line_upload" >
         </activity>
+        <activity
+            android:name=".PathSyncActivity"
+            android:label="@string/title_activity_path_sync" >
+        </activity>
     </application>
 
 </manifest>
