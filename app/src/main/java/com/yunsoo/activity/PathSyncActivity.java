@@ -32,17 +32,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PathSyncActivity extends BaseActivity implements DataServiceImpl.DataServiceDelegate {
+
+
     private MyDataBaseHelper dataBaseHelper;
     private ListView lv_path_sync;
     private TitleBar titleBar;
     private TextView tv_empty_file_tip;
     private FileSyncAdapter adapter;
 
+
+
     //    private int minIndex;
     private int maxIndex;
 
     private List<String> fileNames;
     private List<Integer> status;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +95,7 @@ public class PathSyncActivity extends BaseActivity implements DataServiceImpl.Da
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     if (i==0){
                                         Intent intent=new Intent(PathSyncActivity.this,OffLineUploadActivity.class);
+                                        intent.putExtra(OffLineUploadActivity.OFFLINE_TYPE,OffLineUploadActivity.PATH_TYPE);
                                         startActivity(intent);
                                     }
                                     else if(i==1){
