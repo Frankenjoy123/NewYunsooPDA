@@ -18,7 +18,7 @@
 
     <TextView
         android:id="@+id/tv_path_empty_tip"
-        android:text="@string/has_no_pack_sync"
+        android:text="@string/has_no_path_sync"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"

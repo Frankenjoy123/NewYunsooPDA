@@ -34,22 +34,12 @@ public class WelcomeActivity extends BaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-        SharedPreferences preferences=getSharedPreferences("yunsoo_pda",MODE_PRIVATE);
-        isAuthorize=preferences.getBoolean("isAuthorize",false);
+        isAuthorize=SessionManager.getInstance().getAuthUser().isAuthorized();
+
+//        SharedPreferences preferences=getSharedPreferences("yunsoo_pda",MODE_PRIVATE);
+//        isAuthorize=preferences.getBoolean("isAuthorize",false);
         init();
-        SessionManager sessionManager = SessionManager.initializeIntance(this);
-        sessionManager.restore();
-        DeviceManager deviceManager= DeviceManager.initializeIntance(this.getApplicationContext());
-        NetworkManager.initializeIntance(this).isNetworkConnected();
 
-        CacheService.initializeInstance(this);
-
-        FileManager.initializeIntance(this);
-
-        SQLiteManager.initializeIntance(this);
-
-        LogisticManager logisticManager=LogisticManager.initializeInstance(this);
-        logisticManager.restore();
 
 
         new Handler().postDelayed(new Runnable() {
@@ -62,15 +52,6 @@ public class WelcomeActivity extends BaseActivity{
                 else{
                     gotoAuthorizeActivity();
                 }
-//                if (SessionManager.getInstance().getAuthUser().isAuthorized()) {
-//                    gotoMainActivity();
-//                }
-//                else {
-//                    ll_btn_area.setVisibility(View.VISIBLE);
-//                    Animation animation = AnimationUtils.loadAnimation(WelcomeActivity.this, R.anim.anim_welcome_btn);
-//                    ll_btn_area.startAnimation(animation);
-//
-//                }
             }
         }, 1000);
 

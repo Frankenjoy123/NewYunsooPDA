@@ -129,10 +129,10 @@ public class AuthorizeActivity extends BaseActivity implements DataServiceImpl.D
                 }
 
                 if(service instanceof AuthorizeService){
-                    SharedPreferences preferences=getSharedPreferences("yunsoo_pda",MODE_PRIVATE);
-                    SharedPreferences.Editor editor=preferences.edit();
-                    editor.putBoolean("isAuthorize",true);
-                    editor.commit();
+//                    SharedPreferences preferences=getSharedPreferences("yunsoo_pda",MODE_PRIVATE);
+//                    SharedPreferences.Editor editor=preferences.edit();
+//                    editor.putBoolean("isAuthorize",true);
+//                    editor.commit();
                     hideLoading();
                     ToastMessageHelper.showMessage(AuthorizeActivity.this,R.string.scan_success,true);
 

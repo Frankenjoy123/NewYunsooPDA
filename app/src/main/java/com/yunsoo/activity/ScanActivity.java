@@ -1,10 +1,12 @@
 package com.yunsoo.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -273,10 +275,6 @@ public class ScanActivity extends Activity {
                 finishedBags=data.getIntExtra("edit_count",-1);
             }
 
-//            for (int i = 0; i < standards.size(); i++) {
-//                msgList.add(""+standards.get(i)+"个/箱");
-//            }
-//            msgList.add(""+standards.get(standards.size()-1)+"个/箱");
             refreshUI();
 
         }
@@ -375,16 +373,9 @@ public class ScanActivity extends Activity {
 			@Override
 			public void afterTextChanged(Editable s) {
 				Log.d("ZXW", "scanPackageKey afterTextChanged");
-				/**
-				 * String newNumber =new StringBuilder(dialEtBox.getText().toString()).
-				 * append(inputNumber).toString();  
-				 */
-				
 				
 				String string=new StringBuilder(s.toString()).toString();
                 String pack_key=replaceBlank(getLastString(string));
-//				String saveContent="";
-//				saveContent+=replaceBlank(getLastString(string))+",";
                 StringBuilder builder=new StringBuilder();
 				for (int i = 0; i < listItems.size(); i++) {
 					ListItem item=listItems.get(i);
@@ -393,36 +384,15 @@ public class ScanActivity extends Activity {
                     if (i<listItems.size()-1){
                         builder.append(",");
                     }
-//					saveContent+=item.getTitle()+",";
 				}
-//				saveContent=saveContent.substring(0, saveContent.lastIndexOf(','));
 
                 try {
                     SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
                     Date date=new Date();
-                    SQLiteOperation.insertPackData(dataBaseHelper.getWritableDatabase(),pack_key,builder.toString(),dateFormat.format(date));
-                    Toast toast = Toast.makeText(getApplicationContext(),
-                            "打包完成", Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.CENTER , 0, 0);
-                    toast.show();
-                    finishedBags++;
-                    finish_package_text.setText("今日已打包： "+finishedBags+"箱");
+                    MyAsyncTask task=new MyAsyncTask(ScanActivity.this);
+                    task.execute(pack_key,builder.toString(),dateFormat.format(date));
 
-                    listItems.clear();
-                    count=0;
-                    progressBar.setProgress(count);
-                    progressText.setText("当前进度:"+count+"/"+standard);
-
-                    editText.requestFocus();
-                    package_key_EditText.clearFocus();
-                    tv_note_scan_pack.setVisibility(View.INVISIBLE);
-                } catch (android.database.sqlite.SQLiteConstraintException e) {
-                    Toast toast = Toast.makeText(getApplicationContext(),
-                            getString(R.string.check_pack_repeat), Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.CENTER , 0, 0);
-                    toast.show();
-
-                }catch (Exception e){
+                } catch (Exception e){
                     e.printStackTrace();
                 }
 
@@ -430,30 +400,60 @@ public class ScanActivity extends Activity {
 		});
 
 
-
 	}
 
-    
-    private boolean writeFile(String content) {
-        try {
-            File file = new File(FileOperation.createNewFileName("/Pack_"));
-            BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
+    private class MyAsyncTask extends AsyncTask<String,Integer,String>{
 
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-            Date curDate = new Date(System.currentTimeMillis());
-            String str = formatter.format(curDate);
-            content = str + "," + content;
-            content += "\r\n";
-//
-            bw.write(content);
-            bw.flush();
-            return true;
-        } catch (Exception ex) {
-//            logger.e(ex);
-        	Log.d("ZXW", "MainActivity writeFile");
-            return false;
+        Context context;
+        MyAsyncTask(Context context){
+            this.context=context;
         }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+                SQLiteOperation.insertPackData(dataBaseHelper.getWritableDatabase(),params[0],params[1],params[2]);
+                dataBaseHelper.close();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast toast = Toast.makeText(getApplicationContext(),
+                                "打包完成", Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.CENTER , 0, 0);
+                        toast.show();
+                        finishedBags++;
+                        finish_package_text.setText("今日已打包： "+finishedBags+"箱");
+
+                        listItems.clear();
+                        count=0;
+                        progressBar.setProgress(count);
+                        progressText.setText("当前进度:"+count+"/"+standard);
+
+                        editText.requestFocus();
+                        package_key_EditText.clearFocus();
+                        tv_note_scan_pack.setVisibility(View.INVISIBLE);
+                    }
+                });
+            } catch (android.database.sqlite.SQLiteConstraintException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast toast = Toast.makeText(getApplicationContext(),
+                                getString(R.string.check_pack_repeat), Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.CENTER , 0, 0);
+                        toast.show();
+                    }
+                });
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+
     }
+
+
 
 	private String replaceBlank(String str) {
         String dest = "";

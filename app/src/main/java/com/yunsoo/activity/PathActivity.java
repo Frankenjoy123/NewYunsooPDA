@@ -146,65 +146,37 @@ public class PathActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				if(!keys.isEmpty()){
-//					String saveContent="";
-					for (int i = 0; i < keys.size(); i++) {
-                        SQLiteOperation.insertPathData(dataBaseHelper.getWritableDatabase(),keys.get(i),actionId,dateFormat.format(date));
-//						saveContent+=keys.get(i)+",";
-					}
-//					saveContent=saveContent.substring(0, saveContent.lastIndexOf(','));
-					
-//					Boolean result=writeFile(saveContent);
-//					if (result) {
-						keys.clear();
-                        if (keys==null||keys.size()==0){
-                            btnSubmit.setEnabled(false);
-                        }
-                        else {
-                            btnSubmit.setEnabled(true);
-                        }
-						adaper.notifyDataSetChanged();
-//					}
-				}
 
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            for (int i = 0; i < keys.size(); i++) {
+                                SQLiteOperation.insertPathData(dataBaseHelper.getWritableDatabase(),
+                                        keys.get(i),actionId,dateFormat.format(date));
+                            }
+                            keys.clear();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    btnSubmit.setEnabled(false);
+                                    adaper.notifyDataSetChanged();
+                                }
+                            });
+
+                        }
+                    }).start();
+				}
 			}
 		});
 	}
 
-
-    private boolean writeFile(String content) {
-        try {
-        	
-        		String currFileName= FileOperation.createNewFileName("/Path_");
-        		String deviceString="";
-        		if (!currFileName.equals(prevFileName)) {
-        			deviceString="DeviceCode:"+uniqueId+"\r\n";
-				}
-        		prevFileName=currFileName;
-        		
-                File file = new File(currFileName);
-                BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
-
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-                Date curDate = new Date(System.currentTimeMillis());
-                String str = formatter.format(curDate);
-                content=deviceString+str+","+content+"\r\n";
-
-                bw.write(content);
-                bw.flush();
-                
-//        	}
- 
-            return true;
-        } catch (Exception ex) {
-//            logger.e(ex);
-        	Log.d("ZXW", "MainActivity writeFile");
-            return false;
-        }
+    @Override
+    public void finish() {
+        dataBaseHelper.close();
+        super.finish();
     }
 
-
-
-	private void bindTextChanged(){
+    private void bindTextChanged(){
 		et_path= (EditText) findViewById(R.id.et_path);
 		et_path.requestFocus();
 		
@@ -259,30 +231,6 @@ public class PathActivity extends Activity {
 				}
 				
 			}
-		});
-	}
-	
-	private void BindListViewEvent(){
-		lv_path.setOnItemLongClickListener(new OnItemLongClickListener() {
-
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				final int po=position;
-				builder=new Builder(PathActivity.this);
-				
-				builder.setPositiveButton("ɾ��",new DialogInterface.OnClickListener(){
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-
-					}
-				})
-				.create().show();
-				
-						
-				return true;
-			}
-			
 		});
 	}
 

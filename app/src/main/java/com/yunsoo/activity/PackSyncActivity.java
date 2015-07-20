@@ -55,7 +55,7 @@ public class PackSyncActivity extends BaseActivity implements DataServiceImpl.Da
 
         createPackFile();
 
-        getPackFileNames();
+//        getPackFileNames();
 
     }
 
@@ -115,6 +115,7 @@ public class PackSyncActivity extends BaseActivity implements DataServiceImpl.Da
             FileUpLoadService service=new FileUpLoadService(files[i].getAbsolutePath());
             service.setIndex(i);
             service.setDelegate(this);
+            service.setFileType(FileUpLoadService.PACK_FILE);
             service.start();
         }
         adapter.notifyDataSetChanged();
@@ -196,67 +197,74 @@ public class PackSyncActivity extends BaseActivity implements DataServiceImpl.Da
     }
 
     private void createPackFile() {
-        dataBaseHelper=new MyDataBaseHelper(this, Constants.SQ_DATABASE,null,1);
-        Cursor cursor= null;
-        try {
-            cursor = dataBaseHelper.getReadableDatabase().rawQuery("select * from pack where _id>?",
-                    new String[]{String.valueOf(SQLiteManager.getInstance().getPackLastId())});
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        if (cursor!=null&&cursor.getCount()>0){
-
-            StringBuilder builder=new StringBuilder();
-
-            while (cursor.moveToNext()){
-                if (cursor.isLast()){
-                    maxIndex=cursor.getInt(0);
-                    SQLiteManager.getInstance().savePackLastId(maxIndex);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                dataBaseHelper=new MyDataBaseHelper(PackSyncActivity.this, Constants.SQ_DATABASE,null,1);
+                Cursor cursor= null;
+                try {
+                    cursor = dataBaseHelper.getReadableDatabase().rawQuery("select * from pack where _id>?",
+                            new String[]{String.valueOf(SQLiteManager.getInstance().getPackLastId())});
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                builder.append(cursor.getString(3));
-                builder.append(",");
-                builder.append(cursor.getString(1));
-                builder.append(",");
-                builder.append(cursor.getString(2));
-                builder.append("\r\n");
+
+                if (cursor!=null&&cursor.getCount()>0){
+
+                    StringBuilder builder=new StringBuilder();
+
+                    while (cursor.moveToNext()){
+                        if (cursor.isLast()){
+                            maxIndex=cursor.getInt(0);
+                            SQLiteManager.getInstance().savePackLastId(maxIndex);
+                        }
+                        builder.append(cursor.getString(3));
+                        builder.append(",");
+                        builder.append(cursor.getString(1));
+                        builder.append(",");
+                        builder.append(cursor.getString(2));
+                        builder.append("\r\n");
+                    }
+
+                    dataBaseHelper.close();
+
+                    try {
+
+                        String folderName = android.os.Environment.getExternalStorageDirectory() +
+                                Constants.YUNSOO_FOLDERNAME+Constants.PACK_SYNC_TASK_FOLDER;
+                        File pack_task_folder = new File(folderName);
+                        if (!pack_task_folder.exists())
+                            pack_task_folder.mkdirs();
+
+                        StringBuilder fileNameBuilder=new StringBuilder("Pack_");
+                        fileNameBuilder.append(DeviceManager.getInstance().getDeviceId());
+                        fileNameBuilder.append("_");
+                        fileNameBuilder.append(FileManager.getInstance().getPackFileLastIndex() + 1);
+                        fileNameBuilder.append(".txt");
+
+                        File file=new File(pack_task_folder,fileNameBuilder.toString());
+
+                        BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
+
+                        bw.write(builder.toString());
+                        bw.flush();
+
+                        FileManager.getInstance().savePackFileIndex(FileManager.getInstance().getPackFileLastIndex() + 1);
+
+
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        getPackFileNames();
+                    }
+                });
             }
-//            try {
-//                dataBaseHelper.getWritableDatabase().execSQL("update pack set status='1' where _id>=? and _id<=?",
-//                        new String[]{String.valueOf(minIndex),String.valueOf(maxIndex)});
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-            dataBaseHelper.close();
-
-            try {
-
-                String folderName = android.os.Environment.getExternalStorageDirectory() +
-                        Constants.YUNSOO_FOLDERNAME+Constants.PACK_SYNC_TASK_FOLDER;
-                File pack_task_folder = new File(folderName);
-                if (!pack_task_folder.exists())
-                    pack_task_folder.mkdirs();
-
-                StringBuilder fileNameBuilder=new StringBuilder("Pack_");
-                fileNameBuilder.append(DeviceManager.getInstance().getDeviceId());
-                fileNameBuilder.append("_");
-                fileNameBuilder.append(FileManager.getInstance().getPackFileLastIndex() + 1);
-                fileNameBuilder.append(".txt");
-
-                File file=new File(pack_task_folder,fileNameBuilder.toString());
-
-                BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
-
-                bw.write(builder.toString());
-                bw.flush();
-
-                FileManager.getInstance().savePackFileIndex(FileManager.getInstance().getPackFileLastIndex() + 1);
-
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
+        }).start();
 
     }
 

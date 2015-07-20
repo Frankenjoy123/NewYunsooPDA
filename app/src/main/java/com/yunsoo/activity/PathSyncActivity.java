@@ -59,9 +59,18 @@ public class PathSyncActivity extends BaseActivity implements DataServiceImpl.Da
 
         init();
 
-        createFile();
-
-        getPackFileNames();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                createFile();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        getPackFileNames();
+                    }
+                });
+            }
+        }).start();
 
     }
 

@@ -22,7 +22,7 @@ public class LogisticActionService extends DataServiceImpl {
     protected JSONObject method() throws ServerAuthException, ServerGeneralException, LocalGeneralException,
             NetworkNotAvailableException, Exception {
 
-        Log.d("ZXW","PermanentTokenLoginService start");
+        Log.d("ZXW","LogisticActionService start");
         JSONObject result = RequestManager.GetWithURL(URL);
 
         LogisticManager.getInstance().saveLogisticAction(result);

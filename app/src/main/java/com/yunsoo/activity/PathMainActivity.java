@@ -15,6 +15,8 @@ import com.yunsoo.activity.R;
 import com.yunsoo.adapter.LogisticActionAdapter;
 import com.yunsoo.manager.LogisticManager;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +42,15 @@ public class PathMainActivity extends BaseActivity implements View.OnClickListen
             lv_action= (ListView) findViewById(R.id.lv_action);
             actionAdapter=new LogisticActionAdapter(this);
             actions=LogisticManager.getInstance().getActionList();
+            if (actions==null||actions.size()<1){
+                actions=new ArrayList<>();
+                Map<Integer, String> map1=new HashMap();
+                map1.put(100,"入库");
+                Map<Integer, String> map2=new HashMap();
+                map2.put(200,"出库");
+                actions.add(map1);
+                actions.add(map2);
+            }
             actionAdapter.setActions(actions);
             lv_action.setAdapter(actionAdapter);
 

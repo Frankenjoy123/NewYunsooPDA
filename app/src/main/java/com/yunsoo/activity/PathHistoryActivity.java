@@ -43,24 +43,38 @@ public class PathHistoryActivity extends Activity {
         titleBar.setDisplayAsBack(true);
         titleBar.setTitle(actionName+"扫描历史");
 
-        try {
-//            historyFileReader=new FileRead("Path_");
-//            Time time=new Time();
-//            time.setToNow();
-//            historyList=historyFileReader.getKeyList(time);
-            Cursor cursor=dataBaseHelper.getReadableDatabase().rawQuery("select * from path where action_id=?",
-                    new String[]{String.valueOf(actionId)});
-            while (cursor.moveToNext()){
-                String pack_key=cursor.getString(1);
-                historyList.add(pack_key);
-            }
-            lv_pathHistory=(ListView) findViewById(R.id.lv_pathHistory);
-            historyAdapter=new PathAdapter(this, getResources());
-            historyAdapter.setKeyList(historyList);
-            lv_pathHistory.setAdapter(historyAdapter);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        lv_pathHistory=(ListView) findViewById(R.id.lv_pathHistory);
+        historyAdapter=new PathAdapter(this, getResources());
+        historyAdapter.setKeyList(historyList);
+        lv_pathHistory.setAdapter(historyAdapter);
 
+
+        getFromDB();
+    }
+
+    private void getFromDB() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    Cursor cursor=dataBaseHelper.getReadableDatabase().rawQuery("select * from path where action_id=?",
+                            new String[]{String.valueOf(actionId)});
+                    while (cursor.moveToNext()){
+                        String pack_key=cursor.getString(1);
+                        historyList.add(pack_key);
+                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            historyAdapter.notifyDataSetChanged();
+                        }
+                    });
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 }
