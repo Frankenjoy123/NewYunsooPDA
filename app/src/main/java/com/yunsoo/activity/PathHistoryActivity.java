@@ -58,7 +58,8 @@ public class PathHistoryActivity extends Activity {
             public void run() {
                 try {
 
-                    Cursor cursor=dataBaseHelper.getReadableDatabase().rawQuery("select * from path where action_id=?",
+                    Cursor cursor=dataBaseHelper.getReadableDatabase()
+                            .rawQuery("select * from path where action_id=? order by _id desc limit 100",
                             new String[]{String.valueOf(actionId)});
                     while (cursor.moveToNext()){
                         String pack_key=cursor.getString(1);

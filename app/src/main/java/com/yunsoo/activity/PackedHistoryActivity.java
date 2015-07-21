@@ -47,7 +47,7 @@ public class PackedHistoryActivity extends Activity {
             @Override
             public void run() {
                 dataBaseHelper=new MyDataBaseHelper(PackedHistoryActivity.this, Constants.SQ_DATABASE,null,1);
-                Cursor cursor=dataBaseHelper.getReadableDatabase().rawQuery("select * from pack", null);
+                Cursor cursor=dataBaseHelper.getReadableDatabase().rawQuery("select * from pack order by _id desc limit 100", null);
 
                 while (cursor.moveToNext()){
                     String pack_key=cursor.getString(1);
