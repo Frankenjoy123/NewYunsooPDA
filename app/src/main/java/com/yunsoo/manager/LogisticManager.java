@@ -42,12 +42,22 @@ public class LogisticManager extends BaseManager {
     }
 
     public List<Map<Integer, String>> getActionList() {
+        if (actionList==null||actionList.size()<1){
+            actionList=new ArrayList<>();
+            Map<Integer, String> map1=new HashMap();
+            map1.put(100,"入库");
+            Map<Integer, String> map2=new HashMap();
+            map2.put(200,"出库");
+            actionList.add(map1);
+            actionList.add(map2);
+        }
         return actionList;
     }
 
     public void saveLogisticAction(JSONObject object){
         JSONArray array=object.optJSONArray("array");
         JSONArray recordArray=new JSONArray();
+        actionList.clear();
         for (int i=0;i<array.length();i++){
             JSONObject actionObject=array.optJSONObject(i);
             int id=actionObject.optInt("id");

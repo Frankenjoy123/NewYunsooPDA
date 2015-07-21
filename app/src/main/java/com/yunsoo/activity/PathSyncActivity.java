@@ -14,6 +14,7 @@ import com.yunsoo.exception.BaseException;
 import com.yunsoo.exception.ServerAuthException;
 import com.yunsoo.manager.DeviceManager;
 import com.yunsoo.manager.FileManager;
+import com.yunsoo.manager.LogisticManager;
 import com.yunsoo.manager.SQLiteManager;
 import com.yunsoo.manager.SessionManager;
 import com.yunsoo.service.DataServiceImpl;
@@ -28,8 +29,12 @@ import org.json.JSONObject;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class PathSyncActivity extends BaseActivity implements DataServiceImpl.DataServiceDelegate {
 
@@ -40,13 +45,13 @@ public class PathSyncActivity extends BaseActivity implements DataServiceImpl.Da
     private TextView tv_empty_file_tip;
     private FileSyncAdapter adapter;
 
-
-
     //    private int minIndex;
     private int maxIndex;
 
     private List<String> fileNames;
     private List<Integer> status;
+
+    private List<Map<Integer,String>> actionList;
 
 
 
@@ -212,69 +217,83 @@ public class PathSyncActivity extends BaseActivity implements DataServiceImpl.Da
     }
 
     private void createFile() {
+        actionList=LogisticManager.getInstance().getActionList();
         dataBaseHelper=new MyDataBaseHelper(this, Constants.SQ_DATABASE,null,1);
         Cursor cursor= null;
-        do {
-            try {
-                cursor = dataBaseHelper.getReadableDatabase().rawQuery("select * from path where _id>? limit 1000",
-                        new String[]{String.valueOf(SQLiteManager.getInstance().getPathLastId())});
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
-            if (cursor!=null&&cursor.getCount()>0){
+        for (int i=0;i<actionList.size();i++){
+            int actionId=actionList.get(i).keySet().iterator().next();
+            do {
+                try {
+                    cursor = dataBaseHelper.getReadableDatabase()
+                            .rawQuery("select * from path where _id>? and action_id=? limit 1000",
+                                    new String[]{String.valueOf(SQLiteManager.getInstance().getPathLastId(actionId)), String.valueOf(actionId)});
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-                StringBuilder builder=new StringBuilder("DeviceCode:");
-                builder.append(DeviceManager.getInstance().getDeviceId());
-                builder.append("\r\n");
+                if (cursor!=null&&cursor.getCount()>0){
+
+                    StringBuilder builder=new StringBuilder("DeviceCode:");
+                    builder.append(DeviceManager.getInstance().getDeviceId());
+                    builder.append("\r\n");
+
+                    builder.append("ActionId:");
+                    builder.append(actionId);
+                    builder.append("\r\n");
+
+                   SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                   Date date=new Date();
+                   builder.append(dateFormat.format(date));
+                    builder.append(",");
 /**
  *     final String CREATE_PATH_TABLE_SQL =
  "create table path(_id integer primary key autoincrement , pack_key, action_id integer,last_save_time)";
  */
-                while (cursor.moveToNext()){
-                    if (cursor.isLast()){
-                        maxIndex=cursor.getInt(0);
-                        SQLiteManager.getInstance().savePathLastId(maxIndex);
+                    while (cursor.moveToNext()){
+                        if (cursor.isLast()){
+                            maxIndex=cursor.getInt(0);
+                            SQLiteManager.getInstance().savePathLastId(actionId,maxIndex);
+                        }
+
+                        builder.append(cursor.getString(1));
+                        builder.append(",");
                     }
-                    builder.append(cursor.getString(2));
-                    builder.append(",");
-                    builder.append(cursor.getString(1));
-                    builder.append(",");
-                    builder.append(cursor.getString(3));
-                    builder.append("\r\n");
-                }
 
-                dataBaseHelper.close();
+                    dataBaseHelper.close();
 
-                try {
+                    try {
 
-                    String folderName = android.os.Environment.getExternalStorageDirectory() +
-                            Constants.YUNSOO_FOLDERNAME+Constants.PATH_SYNC_TASK_FOLDER;
-                    File path_task_folder = new File(folderName);
-                    if (!path_task_folder.exists())
-                        path_task_folder.mkdirs();
+                        String folderName = android.os.Environment.getExternalStorageDirectory() +
+                                Constants.YUNSOO_FOLDERNAME+Constants.PATH_SYNC_TASK_FOLDER;
+                        File path_task_folder = new File(folderName);
+                        if (!path_task_folder.exists())
+                            path_task_folder.mkdirs();
 
-                    StringBuilder fileNameBuilder=new StringBuilder("Path_");
-                    fileNameBuilder.append(DeviceManager.getInstance().getDeviceId());
-                    fileNameBuilder.append("_");
-                    fileNameBuilder.append(FileManager.getInstance().getPathFileLastIndex() + 1);
-                    fileNameBuilder.append(".txt");
+                        StringBuilder fileNameBuilder=new StringBuilder("Path_");
+                        fileNameBuilder.append(DeviceManager.getInstance().getDeviceId());
+                        fileNameBuilder.append("_");
+                        fileNameBuilder.append(FileManager.getInstance().getPathFileLastIndex() + 1);
+                        fileNameBuilder.append(".txt");
 
-                    File file=new File(path_task_folder,fileNameBuilder.toString());
+                        File file=new File(path_task_folder,fileNameBuilder.toString());
 
-                    BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
+                        BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
 
-                    bw.write(builder.toString());
-                    bw.flush();
+                        bw.write(builder.toString());
+                        bw.flush();
 
-                    FileManager.getInstance().savePathFileIndex(FileManager.getInstance().getPathFileLastIndex() + 1);
+                        FileManager.getInstance().savePathFileIndex(FileManager.getInstance().getPathFileLastIndex() + 1);
 
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
+            while (cursor!=null&&cursor.getCount()==1000);
         }
-        while (cursor!=null&&cursor.getCount()==1000);
+
+
 
     }
 
