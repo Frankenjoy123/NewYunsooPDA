@@ -202,60 +202,64 @@ public class PackSyncActivity extends BaseActivity implements DataServiceImpl.Da
             public void run() {
                 dataBaseHelper=new MyDataBaseHelper(PackSyncActivity.this, Constants.SQ_DATABASE,null,1);
                 Cursor cursor= null;
-                try {
-                    cursor = dataBaseHelper.getReadableDatabase().rawQuery("select * from pack where _id>?",
-                            new String[]{String.valueOf(SQLiteManager.getInstance().getPackLastId())});
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
 
-                if (cursor!=null&&cursor.getCount()>0){
-
-                    StringBuilder builder=new StringBuilder();
-
-                    while (cursor.moveToNext()){
-                        if (cursor.isLast()){
-                            maxIndex=cursor.getInt(0);
-                            SQLiteManager.getInstance().savePackLastId(maxIndex);
-                        }
-                        builder.append(cursor.getString(3));
-                        builder.append(",");
-                        builder.append(cursor.getString(1));
-                        builder.append(",");
-                        builder.append(cursor.getString(2));
-                        builder.append("\r\n");
-                    }
-
-                    dataBaseHelper.close();
-
+                do {
                     try {
+                        cursor = dataBaseHelper.getReadableDatabase().rawQuery("select * from pack where _id>? limit 1000",
+                                new String[]{String.valueOf(SQLiteManager.getInstance().getPackLastId())});
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
-                        String folderName = android.os.Environment.getExternalStorageDirectory() +
-                                Constants.YUNSOO_FOLDERNAME+Constants.PACK_SYNC_TASK_FOLDER;
-                        File pack_task_folder = new File(folderName);
-                        if (!pack_task_folder.exists())
-                            pack_task_folder.mkdirs();
+                    if (cursor!=null&&cursor.getCount()>0){
 
-                        StringBuilder fileNameBuilder=new StringBuilder("Pack_");
-                        fileNameBuilder.append(DeviceManager.getInstance().getDeviceId());
-                        fileNameBuilder.append("_");
-                        fileNameBuilder.append(FileManager.getInstance().getPackFileLastIndex() + 1);
-                        fileNameBuilder.append(".txt");
+                        StringBuilder builder=new StringBuilder();
 
-                        File file=new File(pack_task_folder,fileNameBuilder.toString());
+                        while (cursor.moveToNext()){
+                            if (cursor.isLast()){
+                                maxIndex=cursor.getInt(0);
+                                SQLiteManager.getInstance().savePackLastId(maxIndex);
+                            }
+                            builder.append(cursor.getString(3));
+                            builder.append(",");
+                            builder.append(cursor.getString(1));
+                            builder.append(",");
+                            builder.append(cursor.getString(2));
+                            builder.append("\r\n");
+                        }
 
-                        BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
+                        dataBaseHelper.close();
 
-                        bw.write(builder.toString());
-                        bw.flush();
+                        try {
 
-                        FileManager.getInstance().savePackFileIndex(FileManager.getInstance().getPackFileLastIndex() + 1);
+                            String folderName = android.os.Environment.getExternalStorageDirectory() +
+                                    Constants.YUNSOO_FOLDERNAME+Constants.PACK_SYNC_TASK_FOLDER;
+                            File pack_task_folder = new File(folderName);
+                            if (!pack_task_folder.exists())
+                                pack_task_folder.mkdirs();
+
+                            StringBuilder fileNameBuilder=new StringBuilder("Pack_");
+                            fileNameBuilder.append(DeviceManager.getInstance().getDeviceId());
+                            fileNameBuilder.append("_");
+                            fileNameBuilder.append(FileManager.getInstance().getPackFileLastIndex() + 1);
+                            fileNameBuilder.append(".txt");
+
+                            File file=new File(pack_task_folder,fileNameBuilder.toString());
+
+                            BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
+
+                            bw.write(builder.toString());
+                            bw.flush();
+
+                            FileManager.getInstance().savePackFileIndex(FileManager.getInstance().getPackFileLastIndex() + 1);
 
 
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
                     }
                 }
+                while (cursor!=null&&cursor.getCount()==1000);
 
                 runOnUiThread(new Runnable() {
                     @Override
