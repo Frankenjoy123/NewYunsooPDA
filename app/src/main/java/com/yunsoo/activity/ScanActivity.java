@@ -511,6 +511,7 @@ public class ScanActivity extends Activity {
 				convertView = View.inflate(getApplicationContext(), R.layout.list_item_dropdown, null);
 				holder = new ViewHolder();
 				holder.tv_msg =(TextView) convertView.findViewById(R.id.tv_list_item1);
+                holder.iv_standard_delete= (ImageView) convertView.findViewById(R.id.iv_standard_delete);
 				convertView.setTag(holder);
 			}else{
 				holder = (ViewHolder) convertView.getTag();
@@ -518,19 +519,28 @@ public class ScanActivity extends Activity {
 			
 			holder.tv_msg.setText(""+standards.get(position));
 			
-			convertView.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
+			holder.tv_msg.setOnClickListener(new OnClickListener() {
 
-//					input.setText(msgList.get(position));
-					input.setText(standards.get(position).toString());
-					standard=standards.get(position);
-					progressBar.setMax(standard);
-					progressText.setText("当前进度:"+count+"/"+standard);
-					popWin.dismiss();
-				}
-			});
+                @Override
+                public void onClick(View v) {
+                    input.setText(standards.get(position).toString());
+                    standard = standards.get(position);
+                    progressBar.setMax(standard);
+                    progressText.setText("当前进度:" + count + "/" + standard);
+                    popWin.dismiss();
+                }
+            });
+
+            holder.iv_standard_delete.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                    if (standards.get(position).equals(standard)){
+//                        input.setText("");
+//                    }
+                    standards.remove(position);
+                    notifyDataSetChanged();
+                }
+            });
 			
 			return convertView;
 		}
@@ -538,6 +548,7 @@ public class ScanActivity extends Activity {
 
 	private class ViewHolder{
 		TextView tv_msg;
+        ImageView iv_standard_delete;
 	}
 	
     public void onPause() {
