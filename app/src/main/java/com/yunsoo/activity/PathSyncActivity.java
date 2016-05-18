@@ -32,7 +32,6 @@ import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -187,10 +186,10 @@ public class PathSyncActivity extends BaseActivity implements DataServiceImpl.Da
 
     @Override
     public void onRequestFailed(DataServiceImpl service, BaseException exception) {
-//        super.onRequestFailed(service, exception);
-        if (exception instanceof ServerAuthException){
+        super.onRequestFailed(service, exception);
+        if (exception instanceof ServerAuthException && service instanceof FileUpLoadService){
             PermanentTokenLoginService service1=new PermanentTokenLoginService(SessionManager.getInstance().
-                    getAuthUser().getPermanent_token());
+                    getAuthUser().getPermanentToken());
             service1.setDelegate(this);
             service1.start();
         }

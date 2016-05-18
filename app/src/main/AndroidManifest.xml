@@ -97,27 +97,31 @@
         <activity
             android:name=".PackMainActivity"
             android:label="@string/title_activity_pack_main"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".PathMainActivity"
             android:label="@string/title_activity_path_main"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".PackSyncActivity"
             android:label="@string/title_activity_pack_sync"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".OffLineUploadActivity"
             android:label="@string/title_activity_off_line_upload"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".PathSyncActivity"
             android:label="@string/title_activity_path_sync"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".GlobalSettingActivity"
+            android:label="@string/title_activity_global_setting" >
         </activity>
     </application>
 

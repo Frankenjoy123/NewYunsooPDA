@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import com.yunsoo.annotation.ViewById;
 //import com.itxiaowu.manager.DeviceGeoLocationManager;
+import com.yunsoo.exception.BaseException;
 import com.yunsoo.manager.DeviceManager;
 import com.yunsoo.manager.FileManager;
 import com.yunsoo.manager.LogisticManager;
@@ -17,7 +18,11 @@ import com.yunsoo.manager.SQLiteManager;
 import com.yunsoo.manager.SessionManager;
 import com.yunsoo.network.CacheService;
 import com.yunsoo.network.NetworkManager;
+import com.yunsoo.service.DataServiceImpl;
+import com.yunsoo.service.PermanentTokenLoginService;
 import com.yunsoo.util.DensityUtil;
+
+import org.json.JSONObject;
 
 
 public class WelcomeActivity extends BaseActivity{
@@ -34,13 +39,10 @@ public class WelcomeActivity extends BaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-        isAuthorize=SessionManager.getInstance().getAuthUser().isAuthorized();
 
-//        SharedPreferences preferences=getSharedPreferences("yunsoo_pda",MODE_PRIVATE);
-//        isAuthorize=preferences.getBoolean("isAuthorize",false);
+        SharedPreferences preferences=getSharedPreferences("yunsoo_pda",MODE_PRIVATE);
+        isAuthorize=preferences.getBoolean("isAuthorize",false);
         init();
-
-
 
         new Handler().postDelayed(new Runnable() {
 
@@ -56,7 +58,6 @@ public class WelcomeActivity extends BaseActivity{
         }, 1000);
 
     }
-
 
 
     private void init() {

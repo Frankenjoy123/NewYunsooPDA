@@ -29,7 +29,7 @@ public class RequestManager {
 		Log.d(TAG, "Request started: at " + format.format(new Date()));
 		JSONObject jsonObject = null;
 
-		RestClient restClient = new RestClient(Constants.SERVER_URL + url);
+		RestClient restClient = new RestClient(SessionManager.getInstance().getAuthUser().getApi() + url);
 		restClient.SetIsJsonContent(true);
 
 		SetRequestHeader(restClient);
@@ -47,7 +47,7 @@ public class RequestManager {
         JSONObject jsonObject = null;
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss SSS");
         Log.d(TAG, "Request started: at " + format.format(new Date()));
-        RestClient restClient = new RestClient(Constants.SERVER_URL + url);
+        RestClient restClient = new RestClient(SessionManager.getInstance().getAuthUser().getApi() + url);
         restClient.SetIsJsonContent(true);
         SetRequestHeader(restClient);
         jsonObject = restClient.Execute(RestClient.RequestMethod.GET);
@@ -61,7 +61,7 @@ public class RequestManager {
 		Log.d(TAG, "Request started: at " + format.format(new Date()));
 		JSONObject jsonObject = null;
 
-		RestClient restClient = new RestClient(Constants.SERVER_URL + url);
+		RestClient restClient = new RestClient(SessionManager.getInstance().getAuthUser().getApi() + url);
 		restClient.SetIsJsonContent(false);
 		restClient.setIsFilePost(true);
 
@@ -79,7 +79,7 @@ public class RequestManager {
 		Log.d(TAG, "Request started: at " + format.format(new Date()));
 		JSONObject jsonObject = null;
 
-		RestClient restClient = new RestClient(Constants.SERVER_URL + url);
+		RestClient restClient = new RestClient(SessionManager.getInstance().getAuthUser().getApi() + url);
 		restClient.SetIsJsonContent(true);
 
 		SetRequestHeader(restClient);
@@ -102,7 +102,7 @@ public class RequestManager {
 		if (nameValuePairs != null && nameValuePairs.size() > 0) {
 			query = URLEncodedUtils.format(nameValuePairs, HTTP.UTF_8);
 		}
-		RestClient restClient = new RestClient(Constants.SERVER_URL + url
+		RestClient restClient = new RestClient(SessionManager.getInstance().getAuthUser().getApi() + url
 				+ (query == Constants.EmptyString ? Constants.EmptyString : Constants.QuestionMark + query));
 
 		if (forceRefresh != null && forceRefresh.length > 0 && forceRefresh[0]) {
@@ -125,7 +125,7 @@ public class RequestManager {
 		if (nameValuePairs != null && nameValuePairs.size() > 0) {
 			query = URLEncodedUtils.format(nameValuePairs, HTTP.UTF_8);
 		}
-		RestClient restClient = new RestClient(Constants.SERVER_URL + url
+		RestClient restClient = new RestClient(SessionManager.getInstance().getAuthUser().getApi() + url
 				+ (query == Constants.EmptyString ? Constants.EmptyString : Constants.QuestionMark + query));
 
 		if (forceRefresh != null && forceRefresh.length > 0 && forceRefresh[0]) {
@@ -163,7 +163,9 @@ public class RequestManager {
 		restClient.AddHeader("SDKVersion", deviceManager.getDeviceSDKVersion());
 //		restClient.AddHeader("GeoLocation", deviceManager.getDeviceGeoLocationInfo());
 		restClient.AddHeader("ClientVersion", deviceManager.getAppVersion());
-        restClient.AddHeader("X-YS-AppId","34");
+		restClient.AddHeader(Constants.APP_ID,"34");
+		restClient.AddHeader(Constants.DEVICE_ID,deviceManager.getDeviceId());
+
 	}
 
 	private static void SetRequestHeader(RestClient restClient) {
@@ -178,7 +180,7 @@ public class RequestManager {
 		Log.d(TAG, "Request started: at " + format.format(new Date()));
 		JSONObject jsonObject = null;
 
-		RestClient restClient = new RestClient(Constants.SERVER_URL + url);
+		RestClient restClient = new RestClient(SessionManager.getInstance().getAuthUser().getApi() + url);
 		restClient.SetIsJsonContent(true);
 
 		SetRequestHeader(restClient);
@@ -195,7 +197,7 @@ public class RequestManager {
 		Log.d(TAG, url + " Request started: at " + format.format(new Date()));
 		JSONObject jsonObject = null;
 
-		RestClient restClient = new RestClient(Constants.SERVER_URL + url);
+		RestClient restClient = new RestClient(SessionManager.getInstance().getAuthUser().getApi() + url);
 		restClient.SetIsJsonContent(true);
 
 		SetRequestHeader(restClient);

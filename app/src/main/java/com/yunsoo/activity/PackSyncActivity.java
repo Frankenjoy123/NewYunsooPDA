@@ -167,10 +167,10 @@ public class PackSyncActivity extends BaseActivity implements DataServiceImpl.Da
 
     @Override
     public void onRequestFailed(DataServiceImpl service, BaseException exception) {
-//        super.onRequestFailed(service, exception);
-        if (exception instanceof ServerAuthException){
+        super.onRequestFailed(service, exception);
+        if (exception instanceof ServerAuthException && service instanceof FileUpLoadService){
             PermanentTokenLoginService service1=new PermanentTokenLoginService(SessionManager.getInstance().
-                    getAuthUser().getPermanent_token());
+                    getAuthUser().getPermanentToken());
             service1.setDelegate(this);
             service1.start();
         }

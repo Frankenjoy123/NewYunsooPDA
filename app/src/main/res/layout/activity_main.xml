@@ -20,9 +20,9 @@
             android:id="@+id/rl_yunsoo_path"
             layout="@layout/action_item_layout_bottom" />
 
-        <!--<include-->
-            <!--android:id="@+id/rl_modify_package"-->
-            <!--layout="@layout/action_item_layout_bottom" />-->
+        <include
+            android:id="@+id/rl_settting"
+            layout="@layout/action_item_layout_bottom" />
 
         </LinearLayout>
 

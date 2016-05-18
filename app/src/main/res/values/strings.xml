@@ -115,5 +115,16 @@
 
     <string name="fix_finish">修改完成</string>
     <string name="title_activity_path_sync">PathSyncActivity</string>
+    <string name="title_activity_global_setting">GlobalSettingActivity</string>
+
+    <string name="authorize_status">是否授权</string>
+    <string name="clear_cache">清除历史数据</string>
+    <string name="current_version">当前版本</string>
+
+    <string name="cancel_authorize">取消授权</string>
+    <string name="not_authorize">PDA授权已被取消</string>
+    <string name="cancel_authorize_message">当前PDA的打包和物流功能将不可用，需要重新回到授权界面进行授权</string>
+    <string name="not_authorize_message">当前PDA的授权已在服务平台取消，需要重新回到授权界面进行授权</string>
+    <string name="confirm">确认</string>
 
 </resources>

@@ -1,19 +1,12 @@
 package com.yunsoo.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.yunsoo.entity.AuthUser;
 import com.yunsoo.entity.AuthorizeRequest;
@@ -22,8 +15,6 @@ import com.yunsoo.entity.ScanAuthorizeInfo;
 import com.yunsoo.exception.BaseException;
 import com.yunsoo.manager.DeviceManager;
 import com.yunsoo.manager.SessionManager;
-import com.yunsoo.network.RequestManager;
-import com.yunsoo.network.RestClient;
 import com.yunsoo.service.AuthLoginService;
 import com.yunsoo.service.AuthorizeService;
 import com.yunsoo.service.DataServiceImpl;
@@ -37,6 +28,9 @@ public class AuthorizeActivity extends BaseActivity implements DataServiceImpl.D
 
     private EditText et_authorize_code;
     private String content;
+    private String api;
+    private String accessToken;
+    private String permanentToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +60,11 @@ public class AuthorizeActivity extends BaseActivity implements DataServiceImpl.D
                     //start AuthLoginService
                     JSONObject object=new JSONObject(content);
                     String token=object.optString("t");
-//                    AuthUser user = new AuthUser();
-//                    user.setToken(token);
-//                    SessionManager.getInstance().saveLoginCredential(user);
+                    api=object.optString("api");
+                    AuthUser tempAuthUser=new AuthUser();
+                    tempAuthUser.setApi(api);
+                    SessionManager.getInstance().saveLoginCredential(tempAuthUser);
+                    SessionManager.getInstance().restore();
 
                     AuthLoginService authLoginService=new AuthLoginService(token);
                     authLoginService.setDelegate(AuthorizeActivity.this);
@@ -91,14 +87,14 @@ public class AuthorizeActivity extends BaseActivity implements DataServiceImpl.D
                 if(service instanceof AuthLoginService){
                     LoginResult loginResult=new LoginResult();
                     loginResult.populate(data);
-                    String accessToken=loginResult.getAccessToken();
-                    String permanentToken=loginResult.getPermanentToken();
-                    AuthUser user = new AuthUser();
-                    user.setToken(accessToken);
-                    user.setPermanent_token(permanentToken);
-
-                    SessionManager.getInstance().saveLoginCredential(user);
-
+                    accessToken=loginResult.getAccessToken();
+                    permanentToken=loginResult.getPermanentToken();
+                    AuthUser authUser=new AuthUser();
+                    authUser.setApi(api);
+                    authUser.setAccessToken(accessToken);
+                    authUser.setPermanentToken(permanentToken);
+                    SessionManager.getInstance().saveLoginCredential(authUser);
+                    SessionManager.getInstance().restore();
                     try {
                         JSONObject object=new JSONObject(content);
 
@@ -129,16 +125,17 @@ public class AuthorizeActivity extends BaseActivity implements DataServiceImpl.D
                 }
 
                 if(service instanceof AuthorizeService){
-//                    SharedPreferences preferences=getSharedPreferences("yunsoo_pda",MODE_PRIVATE);
-//                    SharedPreferences.Editor editor=preferences.edit();
-//                    editor.putBoolean("isAuthorize",true);
-//                    editor.commit();
+                    SharedPreferences preferences=getSharedPreferences("yunsoo_pda",MODE_PRIVATE);
+                    SharedPreferences.Editor editor=preferences.edit();
+                    editor.putBoolean("isAuthorize",true);
+                    editor.commit();
                     hideLoading();
                     ToastMessageHelper.showMessage(AuthorizeActivity.this,R.string.scan_success,true);
 
                     Intent intent=new Intent(AuthorizeActivity.this,MainActivity.class);
                     startActivity(intent);
                     finish();
+
                 }
 
             }

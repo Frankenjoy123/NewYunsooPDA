@@ -1,16 +1,23 @@
 package com.yunsoo.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
 import com.yunsoo.annotation.ViewById;
 import com.yunsoo.dialog.LoadingDialog;
+import com.yunsoo.entity.AuthUser;
+import com.yunsoo.entity.LoginResult;
 import com.yunsoo.exception.BaseException;
 import com.yunsoo.exception.ServerAuthException;
 import com.yunsoo.manager.SessionManager;
 import com.yunsoo.service.DataServiceImpl;
 import com.yunsoo.service.PermanentTokenLoginService;
+import com.yunsoo.util.ToastMessageHelper;
 
 import org.json.JSONObject;
 
@@ -91,50 +98,57 @@ public abstract class BaseActivity extends Activity implements DataServiceImpl.D
     }
 
     @Override
-    public void onRequestSucceeded(DataServiceImpl service, JSONObject data, boolean isCached) {
+    public void onRequestSucceeded(final DataServiceImpl service, final JSONObject data, boolean isCached) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 hideLoading();
-
+                if (service instanceof PermanentTokenLoginService){
+                    AuthUser authUser=SessionManager.getInstance().getAuthUser();
+                    AuthUser tempAuthUser=new AuthUser();
+                    tempAuthUser.setApi(authUser.getApi());
+                    tempAuthUser.setPermanentToken(authUser.getPermanentToken());
+                    LoginResult loginResult=new LoginResult();
+                    loginResult.populate(data);
+                    tempAuthUser.setAccessToken(loginResult.getAccessToken());
+                    SessionManager.getInstance().saveLoginCredential(tempAuthUser);
+                    SessionManager.getInstance().restore();
+                }
             }
         });
     }
 
     @Override
-    public void onRequestFailed(DataServiceImpl service, final BaseException exception) {
-        if (exception instanceof ServerAuthException){
-            PermanentTokenLoginService service1=new PermanentTokenLoginService(SessionManager.getInstance().
-                    getAuthUser().getPermanent_token());
-            service1.start();
-        }
+    public void onRequestFailed(final DataServiceImpl service, final BaseException exception) {
 
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                hideLoading();
-//                if (exception instanceof ServerAuthException) {
-//                    ServerAuthException authException = (ServerAuthException) exception;
-//                    if (authException.isLoginRequired()) {
-//                        if (SessionManager.getInstance().getAuthUser().isAuthorized() && !SessionManager.getInstance().getAuthUser().isAnonymous()) {
-//                            Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
-//                            startActivity(intent);
-//                        } else {
-//                            //renew anonymous user token
-//                            SessionManager.getInstance().logout();
-//                            Intent intent = new Intent(BaseActivity.this, WelcomeActivity.class);
-//                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                            startActivity(intent);
-//                            BaseActivity.this.finish();
-//                        }
-//                    } else {
-//                        ToastMessageHelper.showErrorMessage(BaseActivity.this, R.string.error_incorrect_password, false);
-//                    }
-//                } else {
-//                    ToastMessageHelper.showErrorMessage(BaseActivity.this, exception.getMessage(), false);
-//                }
-//            }
-//        });
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                hideLoading();
+                if (service instanceof PermanentTokenLoginService && exception instanceof ServerAuthException){
+                    SharedPreferences preferences=getSharedPreferences("yunsoo_pda",MODE_PRIVATE);
+                    SharedPreferences.Editor editor=preferences.edit();
+                    editor.putBoolean("isAuthorize", false);
+                    editor.commit();
+                    SessionManager.getInstance().logout();
+                    AlertDialog dialog = new AlertDialog.Builder(BaseActivity.this).setTitle(R.string.not_authorize)
+                            .setMessage(R.string.not_authorize_message)
+                            .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    Intent intent=new Intent(BaseActivity.this,AuthorizeActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            }).create();
+                    dialog.setCancelable(false);
+                    dialog.show();
+                }else {
+                    ToastMessageHelper.showErrorMessage(BaseActivity.this,exception.getMessage(),true);
+                }
+
+            }
+        });
     }
 
 

@@ -7,7 +7,6 @@ import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
 import com.yunsoo.entity.AuthUser;
-import com.yunsoo.service.LoginService;
 
 import com.yunsoo.util.Constants;
 
@@ -36,7 +35,7 @@ import java.lang.ref.WeakReference;
 public class SessionManager extends BaseManager {
 
     private static SessionManager sessionManager;
-    private AuthUser authUser;
+    private static AuthUser authUser;
     private WeakReference<Activity> topActivityReference;
 
     public static SessionManager initializeIntance(Context context) {
@@ -109,7 +108,7 @@ public class SessionManager extends BaseManager {
     }
 
     public String getToken() {
-        return getAuthUser().getToken();
+        return getAuthUser().getAccessToken();
     }
 
 

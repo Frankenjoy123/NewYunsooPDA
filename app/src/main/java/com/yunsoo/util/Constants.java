@@ -53,13 +53,19 @@ public final class Constants {
 
 		public static final String LastModified = "Last-Modified";		
 	}
-	// we need / slash 
-	public static final String SERVER_URL = "http://api.test.yunsu.co:6080";
+	// we need / slash
+	public static final String SERVER_URL = "http://dev.yunsu.co:6080";
+//	public static final String SERVER_URL = "http://api.test.yunsu.co:6080";
+//    public static final String SERVER_URL = "http://enterprise.test.yunsu.co:9080";
 	public static final String USER_AGREEMENT_URL = "http://t.m.yunsu.co/usercontract";
 
 	public static final String EmptyString = "";
 	public static final String QuestionMark = "?";
 	public static final String NA = "N/A";
+
+	public static final String ACCESS_TOKEN = "X-YS-AccessToken";
+	public static final String APP_ID = "X-YS-AppId";
+	public static final String DEVICE_ID = "X-YS-DeviceId";
 	
 	public static final String CODE_BASE_URL = "http://t.m.yunsu.co/";
 

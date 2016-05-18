@@ -5,7 +5,7 @@ public class ServerAuthException extends BaseException {
 	
 	public ServerAuthException()
 	{
-		super("It's login required.");
+		super("PDA is not authorized");
 	}
 
 	boolean loginRequired;

@@ -32,7 +32,7 @@ public class PermanentTokenLoginService extends DataServiceImpl {
         String accessToken=result.optString("token");
 
         AuthUser user = new AuthUser();
-        user.setToken(accessToken);
+        user.setAccessToken(accessToken);
 
         SessionManager.getInstance().saveLoginCredential(user);
 
